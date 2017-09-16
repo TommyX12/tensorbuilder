@@ -14,6 +14,7 @@ Rectangle {
     property var definition:          null
 	property var connections:         []
     property var connections_visual:  []
+	property var input_values:        []
 	
 	readonly property real title_height: 40
     readonly property real input_height: 60
@@ -24,14 +25,17 @@ Rectangle {
             input_list_model.clear()
             connections        = []
             connections_visual = []
+			input_values = []
             for (var i in definition['inputs']) {
-                input_list_model.append(definition['inputs'][i])
+				var input_definition = definition['inputs'][i]
+				input_list_model.append({'definition': input_definition, 'index': i})
                 connections.push(null)
                 connections_visual.push(null)
+				input_values.push(input_definition.default)
             }
             output_list_model.clear()
 			for (var i in definition['outputs']) {
-				output_list_model.append(definition['outputs'][i])
+				output_list_model.append({'definition': definition['outputs'][i], 'index': i})
 			}
         }
     }
@@ -50,9 +54,7 @@ Rectangle {
 	}
 	
 	function set_connection(from_node, from_index, index) {
-        console.log(definition.inputs)
         if (definition.inputs[index].type !== 'reference') return
-        console.log('fds')
         
         if (connections[index] !== null) {
             remove_connection(index)
@@ -152,6 +154,7 @@ Rectangle {
 				}
 				
 				delegate: Item {
+					id: input_list_delegate
 					height: input_height
 					width: 150
 					
@@ -163,30 +166,17 @@ Rectangle {
 						
 						onPressed: function (event) {
 							if (graphDisplay.target_set) {
-								var i = 0;
-								for (i = 0; i < input_list_model.count; ++i) {
-									if (input_list_model.get(i).name === name) {
-										break
-									}
-								}
-	
-								graphDisplay.end_dragging_connection(node, i)
+								graphDisplay.end_dragging_connection(node, index)
 							}
 							else {
-								if (node.connections[i] === null) return
-								var i = 0;
-								for (i = 0; i < input_list_model.count; ++i) {
-									if (input_list_model.get(i).name === name) {
-										break
-									}
+								if (node.connections[index]) {
+									var from_node = node.connections[index].from_node
+									var from_index = node.connections[index].from_index
+									
+									node.remove_connection(index)
+									
+									graphDisplay.start_dragging_connection(from_node, from_index)
 								}
-								
-								var from_node = node.connections[i].from_node
-								var from_index = node.connections[i].from_index
-								
-								node.remove_connection(i)
-	
-								graphDisplay.start_dragging_connection(from_node, from_index)
 							}
 						}
 					}
@@ -201,7 +191,7 @@ Rectangle {
 							anchors.top: parent.top
 							width: 50
 							height: 30
-							text: name
+							text: definition.name
 						}
 						
 						ComboBox {
@@ -209,7 +199,7 @@ Rectangle {
 							Layout.fillWidth: true
 							Layout.minimumWidth: 10
 							Layout.maximumWidth: 65536
-							visible: type === 'type'
+							visible: definition.type === 'type'
 							model: {
 								var result = []
 								for (var i in main.types) {
@@ -218,19 +208,42 @@ Rectangle {
 								
 								return result
 							}
+							
+							onActivated: function (i) {
+								if (!visible) return
+								input_values[index] = model[i]
+							}
 						}
 						
 						
-						TextField {
-							height: 22
+                        TextField {
+                            id: input_literal_field
+                            height: 22
+                            Layout.fillWidth: true
+                            Layout.minimumWidth: 10
+                            Layout.maximumWidth: 65536
+                            visible: definition.type === 'literal'
+                            selectByMouse: true
+                            placeholderText: qsTr('(input)')
+							
+							onTextChanged: {
+								if (!visible) return
+								input_values[index] = text
+							}
+                        }
+                        
+						MyButton {
+							height: 30
 							Layout.fillWidth: true
 							Layout.minimumWidth: 10
 							Layout.maximumWidth: 65536
-							visible: type === 'literal'
-							selectByMouse: true
-							placeholderText: qsTr('(input)')
+							visible: definition.type === 'code'
+                            text: qsTr('Edit')
+							
+							onClicked: {
+								graphDisplay.show_code_editor(node, index)
+							}
 						}
-						
 						
 						MyLabel {
 							height: 30
@@ -239,7 +252,7 @@ Rectangle {
 							Layout.fillHeight: true
 							Layout.minimumWidth: 10
 							Layout.maximumWidth: 65536
-							visible: type === 'reference'
+							visible: definition.type === 'reference'
 							text: qsTr('(reference)')
 							font.pixelSize: 14
 							color: 'gray'
@@ -271,14 +284,7 @@ Rectangle {
 						x: -width
 						
 						onPressed: {
-							var i = 0;
-							for (i = 0; i < output_list_model.count; ++i) {
-								if (output_list_model.get(i).name === name) {
-									break
-								}
-							}
-
-							graphDisplay.start_dragging_connection(node, i)
+							graphDisplay.start_dragging_connection(node, index)
 						}
 						onReleased: {
 							
@@ -288,7 +294,7 @@ Rectangle {
 					MyLabel {
 						anchors.fill: parent
 						anchors.rightMargin: 10
-						text: name
+						text: definition.name
 						horizontalAlignment: Text.AlignRight
 					}
 				}

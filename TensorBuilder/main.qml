@@ -103,6 +103,7 @@ ApplicationWindow {
                 {
                     'name': 'Name',
                     'type': 'literal',
+					'default': '',
                 },
                 {
 					'name': 'Type',
@@ -116,6 +117,32 @@ ApplicationWindow {
                 },
             ],
         },
+        {
+            'title': 'Uniform Random',
+            'color': color_blue,
+            'inputs': [
+                {
+                    'name': 'Shape',
+                    'type': 'code',
+					'default': '[1]',
+                },
+                {
+                    'name': 'Min',
+                    'type': 'literal',
+					'default': '0.0',
+                },
+                {
+                    'name': 'Max',
+                    'type': 'literal',
+					'default': '1.0',
+                },
+            ],
+            'outputs': [
+                {
+                    'name': 'Value',
+                },
+            ],
+        },
 		{
             'title': 'Constant',
 			'color': color_blue,
@@ -123,6 +150,7 @@ ApplicationWindow {
                 {
                     'name': 'Name',
                     'type': 'literal',
+					'default': '',
                 },
                 {
 					'name': 'Value',
@@ -148,6 +176,7 @@ ApplicationWindow {
                 {
                     'name': 'Name',
                     'type': 'literal',
+					'default': '',
                 },
                 {
 					'name': 'Init Value',
@@ -173,6 +202,7 @@ ApplicationWindow {
                 {
                     'name': 'Name',
                     'type': 'literal',
+					'default': '',
                 },
                 {
 					'name': 'Node 1',
@@ -198,6 +228,7 @@ ApplicationWindow {
                 {
                     'name': 'Name',
                     'type': 'literal',
+					'default': '',
                 },
                 {
 					'name': 'Node 1',

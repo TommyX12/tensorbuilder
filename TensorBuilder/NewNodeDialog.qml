@@ -42,6 +42,8 @@ MyDialog {
 				text: definition.title
 				buttonColor: definition.color
 				
+				bold: true
+				
 				onClicked: {
 					var node = add_graph_node(definition)
 					node.x = last_right_click_x

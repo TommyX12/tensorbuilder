@@ -15,6 +15,8 @@ Rectangle {
     property color currentColor
     property color borderColor
     property color textColor
+	
+	property bool bold: false
     /*
     property color disabledColor//: "#cccccc"
     property color disabledBorderColor//: "#888888"
@@ -153,7 +155,7 @@ Rectangle {
         id: txt
         text: root.text
         color: root.enabled ? textColor : disabledTextColor;
-		font.bold: true
+		font.bold: bold
         anchors.centerIn: parent;
     }
 }

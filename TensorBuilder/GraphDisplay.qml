@@ -49,6 +49,12 @@ Rectangle {
         
         return node
     }
+	
+	function show_code_editor(node, index) {
+		code_edit_dialog.node = node
+		code_edit_dialog.index = index
+		code_edit_dialog.open()
+	}
     
     function remove_graph_node(node) {
         for (var i in node.connections) {
@@ -58,7 +64,6 @@ Rectangle {
         for (var i in nodes) {
             var _node = nodes[i]
             if (_node === node) {
-                console.log('found')
                 index = i
                 continue
             }
@@ -120,8 +125,9 @@ Rectangle {
                 right_click_menu.open()
                 right_click_menu.x = event.x - 10
                 right_click_menu.y = event.y - 10
-                last_right_click_x = event.x
-                last_right_click_y = event.y
+				
+				last_right_click_x = (event.x - offset_x) / view_scale;
+				last_right_click_y = (event.y - offset_y) / view_scale;
                 return
             }
         }
@@ -169,8 +175,8 @@ Rectangle {
 		}
 		
 		onPressed: function (event) {
-            last_click_x = event.x
-            last_click_y = event.y
+			last_click_x = (event.x - offset_x) / view_scale;
+			last_click_y = (event.y - offset_y) / view_scale;
 			if (!dragging) {
 				target_set = false
 				event.accepted = false
@@ -213,5 +219,9 @@ Rectangle {
 	
 	NewNodeDialog {
 		id: new_node_dialog
+	}
+	
+	CodeEditDialog {
+		id: code_edit_dialog
 	}
 }
