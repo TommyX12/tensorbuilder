@@ -9,5 +9,6 @@
         <file>GraphNode.qml</file>
         <file>MyLabel.qml</file>
         <file>Connection.qml</file>
+        <file>MyDialog.qml</file>
     </qresource>
 </RCC>

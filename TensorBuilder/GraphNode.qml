@@ -79,7 +79,29 @@ Rectangle {
     MouseArea {
         anchors.fill: parent
         drag.target: parent
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
+        
+        onClicked: function (event) {
+            if (event.button === Qt.RightButton) {
+                right_click_menu.open()
+                right_click_menu.x = event.x - 10
+                right_click_menu.y = event.y - 10
+                return
+            }
+        }
 		
+        Menu {
+            id: right_click_menu
+            y: 0
+
+            MenuItem {
+                text: qsTr('Delete')
+                
+                onTriggered: {
+                    graphDisplay.remove_graph_node(node)
+                }
+            }
+        }
     }
 	
 	ColumnLayout {

@@ -216,19 +216,16 @@ ApplicationWindow {
     
     
     GraphDisplay {
-        anchors.left:   selectionPanel.right
-        anchors.right:  parent.right
-        anchors.top:    parent.top
-        anchors.bottom: parent.bottom
+        anchors.fill: parent
     }
     
-    SelectionPanel {
-        id: selectionPanel
-        anchors.left:   parent.left
-        anchors.top:    parent.top
-        anchors.bottom: parent.bottom
-        width: 250
-    }
+    // SelectionPanel {
+        // id: selectionPanel
+        // anchors.left:   parent.left
+        // anchors.top:    parent.top
+        // anchors.bottom: parent.bottom
+        // width: 250
+    // }
     
     // SwipeView {
         // id: swipeView
