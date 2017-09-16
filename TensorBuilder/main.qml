@@ -97,9 +97,13 @@ ApplicationWindow {
     
     property var definitions: [
         {
-            'name': 'Placeholder',
+            'title': 'Placeholder',
 			'color': color_blue,
 			'inputs': [
+                {
+                    'name': 'Name',
+                    'type': 'literal',
+                },
                 {
 					'name': 'Type',
                     'type': 'type',
@@ -113,9 +117,13 @@ ApplicationWindow {
             ],
         },
 		{
-            'name': 'Constant',
+            'title': 'Constant',
 			'color': color_blue,
 			'inputs': [
+                {
+                    'name': 'Name',
+                    'type': 'literal',
+                },
                 {
 					'name': 'Value',
                     'type': 'literal',
@@ -134,9 +142,13 @@ ApplicationWindow {
             ],
         },
 		{
-            'name': 'Variable',
+            'title': 'Variable',
 			'color': color_blue,
 			'inputs': [
+                {
+                    'name': 'Name',
+                    'type': 'literal',
+                },
                 {
 					'name': 'Init Value',
                     'type': 'literal',
@@ -155,9 +167,13 @@ ApplicationWindow {
             ],
         },
 		{
-            'name': 'Add',
+            'title': 'Add',
 			'color': color_red,
 			'inputs': [
+                {
+                    'name': 'Name',
+                    'type': 'literal',
+                },
                 {
 					'name': 'Node 1',
                     'type': 'reference',
@@ -176,9 +192,13 @@ ApplicationWindow {
             ],
         },
 		{
-            'name': 'Multiply',
+            'title': 'Multiply',
 			'color': color_red,
 			'inputs': [
+                {
+                    'name': 'Name',
+                    'type': 'literal',
+                },
                 {
 					'name': 'Node 1',
                     'type': 'reference',
@@ -209,6 +229,47 @@ ApplicationWindow {
 	function random(a, b) {
 		return a + Math.random() * (b - a)
 	}
+    
+    function hsl(r, g, b) {
+        
+        //http://www.easyrgb.com/index.php?X=MATH&H=18#text18
+        
+        var var_Min = Math.min( r, g, b )    //Min. value of RGB
+        var var_Max = Math.max( r, g, b )    //Max. value of RGB
+        var del_Max = var_Max - var_Min             //Delta RGB value
+        
+        var L = ( var_Max + var_Min ) / 2
+        var H = 0.0, S = 0.0
+        
+        if ( del_Max == 0 )                     //This is a gray, no chroma...
+        {
+           H = 0                                //HSL results from 0 to 1
+           S = 0
+        }
+        else                                    //Chromatic data...
+        {
+           if ( L < 0.5 ) S = del_Max / ( var_Max + var_Min )
+           else           S = del_Max / ( 2 - var_Max - var_Min )
+        
+           var del_R = ( ( ( var_Max - r ) / 6 ) + ( del_Max / 2 ) ) / del_Max
+           var del_G = ( ( ( var_Max - g ) / 6 ) + ( del_Max / 2 ) ) / del_Max
+           var del_B = ( ( ( var_Max - b ) / 6 ) + ( del_Max / 2 ) ) / del_Max
+        
+           if      ( r == var_Max ) H = del_B - del_G
+           else if ( g == var_Max ) H = ( 1 / 3 ) + del_R - del_B
+           else if ( b == var_Max ) H = ( 2 / 3 ) + del_G - del_R
+        
+           if ( H < 0 ) H += 1
+           if ( H > 1 ) H -= 1
+        }
+        
+        return {h: H, s: S, l: L};
+    }
+
+    function luma(r, g, b){
+        return 0.299 * r + 0.587 * g + 0.114 * b;
+    }
+
     
     Component.onCompleted: {
         showMaximized()

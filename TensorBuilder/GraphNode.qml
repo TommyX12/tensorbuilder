@@ -101,6 +101,14 @@ Rectangle {
                     graphDisplay.remove_graph_node(node)
                 }
             }
+			
+			MenuItem {
+                text: qsTr('Run')
+                
+                onTriggered: {
+                    
+                }
+            }
         }
     }
 	
@@ -122,7 +130,7 @@ Rectangle {
 				id: title
 				anchors.left: parent.left
 				anchors.leftMargin: 10
-				text: definition === null ? '' : definition['name']
+				text: definition === null ? '' : definition['title']
 				color: '#ffffff'
 			}
 		}
@@ -220,7 +228,7 @@ Rectangle {
 							Layout.maximumWidth: 65536
 							visible: type === 'literal'
 							selectByMouse: true
-							placeholderText: qsTr('(value)')
+							placeholderText: qsTr('(input)')
 						}
 						
 						

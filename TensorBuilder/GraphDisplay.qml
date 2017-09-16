@@ -16,6 +16,9 @@ Rectangle {
 	property var from_node: null
 	property int from_index: 0
     
+    property real last_right_click_x: 0
+    property real last_right_click_y: 0
+    
     property var nodes: []
     
     Component {
@@ -96,10 +99,7 @@ Rectangle {
     }
     
     Component.onCompleted: {
-        var node = add_graph_node(main.definitions[3])
-        node.x = 200
-        node.y = 200
-        var node = add_graph_node(main.definitions[4])
+        
     }
 	
 	MouseArea {
@@ -120,6 +120,8 @@ Rectangle {
                 right_click_menu.open()
                 right_click_menu.x = event.x - 10
                 right_click_menu.y = event.y - 10
+                last_right_click_x = event.x
+                last_right_click_y = event.y
                 return
             }
         }
@@ -150,13 +152,15 @@ Rectangle {
 		hoverEnabled: dragging
         property var from_point: null
 		property bool dragging: false
+        property real last_click_x: 0
+        property real last_click_y: 0
 		
 		onDraggingChanged: {
 			if (dragging) {
 				
 				dragging_connection.visible = true
 				dragging_connection.canvas_rect = dragging_connection.get_canvas_rect(
-							from_point, from_point)
+							from_point, {x: last_click_x, y: last_click_y})
 				entered({accepted: true})
 			}
 			else {
@@ -165,6 +169,8 @@ Rectangle {
 		}
 		
 		onPressed: function (event) {
+            last_click_x = event.x
+            last_click_y = event.y
 			if (!dragging) {
 				target_set = false
 				event.accepted = false
@@ -200,68 +206,12 @@ Rectangle {
 			text: qsTr('New...')
 			
 			onTriggered: {
-				dialog.open()
+				new_node_dialog.open()
 			}
 		}
 	}
 	
-	MyDialog {
-		id: dialog
-		modal: true
-		
-		title: qsTr("New Node")
-		// standardButtons: Dialog.Ok | Dialog.Cancel
-	
-		// onAccepted: console.log("Ok clicked")
-		// onRejected: console.log("Cancel clicked")
-		
-		width: 450
-		height: parent.height * 0.8
-		
-		Rectangle {
-			anchors.fill: parent
-			color: '#cccccc'
-			
-			ListView {
-				id: new_node_list_view
-				anchors.fill: parent
-				
-				interactive: true
-				clip: true
-				
-				Component.onCompleted: {
-					for (var i in main.definitions) {
-						new_node_list_model.append(main.definitions[i])
-						new_node_list_model.append(main.definitions[i])
-						new_node_list_model.append(main.definitions[i])
-						new_node_list_model.append(main.definitions[i])
-						new_node_list_model.append(main.definitions[i])
-						new_node_list_model.append(main.definitions[i])
-					}
-				}
-			
-				model: ListModel {
-					id: new_node_list_model
-				}
-				
-				delegate: Button {
-					height: 40
-                    width: parent.width
-					
-                    text: name
-				}
-				
-				ScrollBar.vertical: ScrollBar {
-					active: true
-				}
-			}
-		}
-		
-		Rectangle {
-			anchors.fill: parent
-			color: 'transparent'
-			border.width: 2
-			border.color: '#a0a0a0'
-		}
+	NewNodeDialog {
+		id: new_node_dialog
 	}
 }

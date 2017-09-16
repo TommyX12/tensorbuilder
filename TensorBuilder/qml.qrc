@@ -11,5 +11,7 @@
         <file>Connection.qml</file>
         <file>MyDialog.qml</file>
         <file>ModelBrowser.qml</file>
+        <file>MyButton.qml</file>
+        <file>NewNodeDialog.qml</file>
     </qresource>
 </RCC>
