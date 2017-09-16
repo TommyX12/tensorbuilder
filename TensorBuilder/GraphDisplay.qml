@@ -60,7 +60,7 @@ Rectangle {
                 continue
             }
             for (var j in _node.connections) {
-                if (_node.connections[j].from_node === node) {
+                if (_node.connections[j] !== null && _node.connections[j].from_node === node) {
                     _node.remove_connection(j)
                 }
             }
@@ -244,15 +244,11 @@ Rectangle {
 					id: new_node_list_model
 				}
 				
-				delegate: Item {
+				delegate: Button {
 					height: 40
+                    width: parent.width
 					
-					MyLabel {
-						anchors.fill: parent
-						anchors.leftMargin: 10
-						text: name
-						horizontalAlignment: Text.AlignLeft
-					}
+                    text: name
 				}
 				
 				ScrollBar.vertical: ScrollBar {

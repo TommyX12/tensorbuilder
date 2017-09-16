@@ -216,16 +216,19 @@ ApplicationWindow {
     
     
     GraphDisplay {
-        anchors.fill: parent
+        anchors.left:   modelBrowser.right
+        anchors.right:  parent.right
+        anchors.top:    parent.top
+        anchors.bottom: parent.bottom
     }
     
-    // SelectionPanel {
-        // id: selectionPanel
-        // anchors.left:   parent.left
-        // anchors.top:    parent.top
-        // anchors.bottom: parent.bottom
-        // width: 250
-    // }
+    ModelBrowser {
+        id: modelBrowser
+        anchors.left:   parent.left
+        anchors.top:    parent.top
+        anchors.bottom: parent.bottom
+        width: 400
+    }
     
     // SwipeView {
         // id: swipeView
