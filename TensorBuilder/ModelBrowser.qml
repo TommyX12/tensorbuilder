@@ -29,7 +29,7 @@ Item {
 
     Rectangle{
         anchors.fill: parent
-        color: "red"
+        color: "#9abab2"
 
         ListView{
             id: model_list_view
@@ -50,11 +50,20 @@ Item {
             }
 
             delegate: Rectangle {
-                height: 50
+                height: 80
                 width: parent.width
+
+                color: "#afcec6"
 
                 Text {
                     text: definition["name"]
+
+                    width: parent.width
+                    height: parent.height
+
+                    font.pointSize: 20
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
                 }
             }
         }
