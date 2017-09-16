@@ -8,5 +8,6 @@
         <file>GraphDisplay.qml</file>
         <file>GraphNode.qml</file>
         <file>MyLabel.qml</file>
+        <file>Connection.qml</file>
     </qresource>
 </RCC>

@@ -7,7 +7,7 @@ ApplicationWindow {
     visible: true
     width: 1024
     height: 768
-    title: qsTr("Hello World")
+    title: qsTr("TensorBuilder")
     
     property var types: [
 		{
@@ -91,10 +91,14 @@ ApplicationWindow {
             // 'python': 'tf.resource',
         // },
     ]
+	
+	readonly property string color_blue: '#3583d6'
+	readonly property string color_red: '#fa6a35'
     
     property var definitions: [
         {
             'name': 'Placeholder',
+			'color': color_blue,
 			'inputs': [
                 {
 					'name': 'Type',
@@ -110,6 +114,7 @@ ApplicationWindow {
         },
 		{
             'name': 'Constant',
+			'color': color_blue,
 			'inputs': [
                 {
 					'name': 'Value',
@@ -130,6 +135,7 @@ ApplicationWindow {
         },
 		{
             'name': 'Variable',
+			'color': color_blue,
 			'inputs': [
                 {
 					'name': 'Init Value',
@@ -150,15 +156,16 @@ ApplicationWindow {
         },
 		{
             'name': 'Add',
+			'color': color_red,
 			'inputs': [
                 {
 					'name': 'Node 1',
-                    'type': 'input',
+                    'type': 'reference',
                     'default': null,
                 },
 				{
 					'name': 'Node 2',
-                    'type': 'input',
+                    'type': 'reference',
                     'default': null,
                 },
             ],
@@ -170,15 +177,16 @@ ApplicationWindow {
         },
 		{
             'name': 'Multiply',
+			'color': color_red,
 			'inputs': [
                 {
 					'name': 'Node 1',
-                    'type': 'input',
+                    'type': 'reference',
                     'default': null,
                 },
 				{
 					'name': 'Node 2',
-                    'type': 'input',
+                    'type': 'reference',
                     'default': null,
                 },
             ],
@@ -192,6 +200,14 @@ ApplicationWindow {
 	
 	function clamp(x, a, b) {
 		return Math.min(Math.max(x, a), b)
+	}
+	
+	function lerp(a, b, x) {
+		return a + (b - a) * x
+	}
+	
+	function random(a, b) {
+		return a + Math.random() * (b - a)
 	}
     
     Component.onCompleted: {
