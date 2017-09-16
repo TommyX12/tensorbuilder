@@ -13,5 +13,6 @@
         <file>MyButton.qml</file>
         <file>NewNodeDialog.qml</file>
         <file>CodeEditDialog.qml</file>
+        <file>ModelBrowser.qml</file>
     </qresource>
 </RCC>
