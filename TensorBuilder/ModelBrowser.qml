@@ -3,44 +3,24 @@
 Item {
 
     function loadModels() {
-        /*
-        var doc = new XMLHttpRequest()
-        doc.onreadystatechange = function() {
-            if (doc.readyState == XMLHttpRequest.HEADERS_RECEIVED) {
-                console.log("Headers -->");
-                console.log(doc.getAllResponseHeaders ());
-                console.log("Last modified -->");
-                console.log(doc.getResponseHeader ("Last-Modified"));
-
-            } else if (doc.readyState == XMLHttpRequest.DONE) {
-                var a = doc.responseXML.documentElement;
-                for (var ii = 0; ii < a.childNodes.length; ++ii) {
-                    console.log(a.childNodes[ii].nodeName);
-                }
-                console.log("Headers -->");
-                console.log(doc.getAllResponseHeaders ());
-                console.log("Last modified -->");
-                console.log(doc.getResponseHeader ("Last-Modified"));
-            }
-        }
-        doc.open("GET", "http://34.234.84.109:3000/models")
-        doc.send()
-        */
         var http = new XMLHttpRequest()
         var url = "http://34.234.84.109:3000/models";
         http.open("GET", url, true);
 
         http.onreadystatechange = function() { // Call a function when the state changes.
+            var definitions = [];
             if (http.readyState == 4) {
                 if (http.status == 200) {
                     var jsondata = JSON.parse(http.responseText)
                     for (var i = 0; i < jsondata.length; i++) {
-                        console.log(jsondata[i]["name"])
+                        // console.log(jsondata[i]["name"])
+                        definitions.push({"name":jsondata[i]["name"]})
                     }
                 } else {
                     console.log("error: " + http.status)
                 }
             }
+            model_list_view.fillModels(definitions);
         }
         http.send();
     }
@@ -49,7 +29,35 @@ Item {
 
     Rectangle{
         anchors.fill: parent
-        color: "green"
+        color: "red"
+
+        ListView{
+            id: model_list_view
+            anchors.fill: parent
+
+            interactive: true
+            clip: true
+
+            function fillModels(definitions) {
+                for (var i in definitions) {
+                    model_list_model.append({'definition': definitions[i]})
+                    // console.log(definitions[i]["name"])
+                }
+            }
+
+            model: ListModel{
+                id: model_list_model
+            }
+
+            delegate: Rectangle {
+                height: 50
+                width: parent.width
+
+                Text {
+                    text: definition["name"]
+                }
+            }
+        }
     }
 
 }
