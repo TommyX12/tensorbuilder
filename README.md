@@ -2,6 +2,18 @@
 
 A drag and drop GUI tool written in Qt to rapidly prototype TensorFlow computational graphs, with sharing features.
 
+## Goals
+
+  - To machine learning more accessible to everyone regardless of programming backgrounds
+  - To allow professionals to quickly test and experiment with different models
+  - To simplify sharing and forking of experimental models for accelerated research
+
+## Features
+
+  - GUI flow chart for rapid prototyping of TensorFlow computational graphs
+  - One-click compile and run python TensorFlow for quick feedback
+  - Instant sharing to community server and browse & fork models uploaded by others
+
 ![Graph editor](pics/3.png)
 
 ## Inspiration
