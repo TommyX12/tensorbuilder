@@ -100,7 +100,16 @@ Item {
     }
 
     function uploadModel() {
-        console.log(main.graphDisplay.nodes);
+        var graphnodes = main.graphDisplay.nodes
+        var IDmap = {}
+        for (var i = 0; i < graphnodes.length; i++){
+            var node = graphnodes[i]
+            var nodejson = {}
+            nodejson['definition'] = node.definition["title"]
+            var connections = node.connections
+            console.log(connections)
+        }
+
         var http = new XMLHttpRequest()
         var url = "http://34.234.84.109:3000/addmodel";
         http.open("POST", url, true);
@@ -120,7 +129,6 @@ Item {
             "name" : "temp",
             "nodes" : []
         }
-        console.log(data)
         // http.send(JSON.stringify(data));
     }
 
