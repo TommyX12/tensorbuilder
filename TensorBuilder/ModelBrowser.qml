@@ -49,7 +49,9 @@ Item {
         http.send();
     }
 
-    Component.onCompleted: loadModels()
+    Component.onCompleted: {
+        loadModels()
+    }
 
     Rectangle{
         anchors.fill: parent
@@ -98,6 +100,7 @@ Item {
     }
 
     function uploadModel() {
+        console.log(main.graphDisplay.nodes);
         var http = new XMLHttpRequest()
         var url = "http://34.234.84.109:3000/addmodel";
         http.open("POST", url, true);
@@ -118,7 +121,7 @@ Item {
             "nodes" : []
         }
         console.log(data)
-        http.send(JSON.stringify(data));
+        // http.send(JSON.stringify(data));
     }
 
     Button {

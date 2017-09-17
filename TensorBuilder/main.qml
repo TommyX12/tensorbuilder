@@ -8,6 +8,7 @@ ApplicationWindow {
     width: 1024
     height: 768
     title: qsTr("TensorBuilder")
+    property alias graphDisplay: graphDisplay
     
     property var types: [
 		{
@@ -501,6 +502,7 @@ ApplicationWindow {
     
     
     GraphDisplay {
+        id: graphDisplay
         anchors.left:   modelBrowser.right
         anchors.right:  parent.right
         anchors.top:    parent.top
