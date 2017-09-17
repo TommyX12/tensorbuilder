@@ -10,5 +10,6 @@
         <file>MyLabel.qml</file>
         <file>Connection.qml</file>
         <file>MyDialog.qml</file>
+        <file>ModelBrowser.qml</file>
     </qresource>
 </RCC>
