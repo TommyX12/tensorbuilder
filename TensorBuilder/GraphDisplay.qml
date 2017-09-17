@@ -235,10 +235,6 @@ Rectangle {
         )
     }
     
-    function compile_to_python(node) {
-        
-    }
-    
     Component.onCompleted: {
         
     }

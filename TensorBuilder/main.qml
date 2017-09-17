@@ -76,6 +76,14 @@ ApplicationWindow {
 	readonly property string color_red: '#fa6a35'
     readonly property string color_green: '#35ba6a'
     
+    property var declarer: {
+        ''
+    }
+    
+    property var executer: {
+        ''
+    }
+    
     property var definitions: [
         {
             'title': 'Placeholder',
