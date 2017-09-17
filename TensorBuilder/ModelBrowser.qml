@@ -30,6 +30,7 @@ Item {
 
     // returns a JSON representationof the nodes
     function loadModel(name){
+        // clear all current nodes first
         var http = new XMLHttpRequest()
         var url = "http://34.234.84.109:3000/models/" + name;
         http.open("GET", url, true);
@@ -39,14 +40,31 @@ Item {
             if (http.readyState == 4) {
                 if (http.status == 200) {
                     var jsondata = JSON.parse(http.responseText)
-                    console.log(jsondata["nodes"])
-                    // TODO: actually load the nodes into the application
+                    var nodelist = []
+                    for (var i = 0; i < jsondata["nodes"].length; i++) {
+                        var nodedata = JSON.parse(jsondata["nodes"][i])
+                        nodelist.push(nodedata)
+                    }
+                    loadNodes(nodelist)
                 } else {
                     console.log("error: " + http.status)
                 }
             }
         }
         http.send();
+    }
+
+    function loadNodes(nodelist) {
+        for (var i = 0; i < nodelist.length; i++){
+            console.log(JSON.stringify(nodelist[i]))
+            for (var j = 0; j < main.definitions.length; j++){
+                if (main.definitions[j]['title'] === nodelist[i]['definition']){
+                    var node = graphDisplay.add_graph_node(main.definitions[j])
+                    node.x = nodelist[i]['x']
+                    node.y = nodelist[i]['y']
+                }
+            }
+        }
     }
 
     Component.onCompleted: {
@@ -101,13 +119,34 @@ Item {
 
     function uploadModel() {
         var graphnodes = main.graphDisplay.nodes
-        var IDmap = {}
+        var finalnodes = []
+        // fill a JSON structure with node info
         for (var i = 0; i < graphnodes.length; i++){
             var node = graphnodes[i]
             var nodejson = {}
+            // let the ID of each node just be their index in the array
+            nodejson['ID'] = i
             nodejson['definition'] = node.definition["title"]
+            nodejson['x'] = node.x
+            nodejson['y'] = node.y
             var connections = node.connections
-            console.log(connections)
+            var connectionarray = []
+            for (var j = 0; j < connections.length; j++){
+                if (connections[j]){
+                    var connectionnode = connections[j]['from_node']
+                    var connectionelement = {}
+                    for (var k = 0; k < graphnodes.length; k++){
+                        if (connectionnode === graphnodes[k]){
+                             connectionelement[k] = connections[j]['from_index']
+                        }
+                    }
+                    connectionarray.push(connectionelement)
+                }else{
+                    connectionarray.push(null)
+                }
+            }
+            nodejson['connections'] = connectionarray
+            finalnodes.push(JSON.stringify(nodejson))
         }
 
         var http = new XMLHttpRequest()
@@ -124,12 +163,12 @@ Item {
                 }
             }
         }
-        // Change the data to upload actual models
+        // TODO: give the ability to change the name of the model
         var data = {
             "name" : "temp",
-            "nodes" : []
+            "nodes" : finalnodes
         }
-        // http.send(JSON.stringify(data));
+        http.send(JSON.stringify(data))
     }
 
     Button {
