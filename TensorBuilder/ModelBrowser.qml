@@ -26,6 +26,27 @@ Item {
         http.send();
     }
 
+    // returns a JSON representationof the nodes
+    function loadModel(name){
+        var http = new XMLHttpRequest()
+        var url = "http://34.234.84.109:3000/models/" + name;
+        http.open("GET", url, true);
+
+        http.onreadystatechange = function() { // Call a function when the state changes.
+            var definitions = [];
+            if (http.readyState == 4) {
+                if (http.status == 200) {
+                    var jsondata = JSON.parse(http.responseText)
+                    console.log(jsondata["nodes"])
+                    // TODO: actually load the nodes into the application
+                } else {
+                    console.log("error: " + http.status)
+                }
+            }
+        }
+        http.send();
+    }
+
     Component.onCompleted: loadModels()
 
     Rectangle{
@@ -53,6 +74,11 @@ Item {
             delegate: Rectangle {
                 height: 80
                 width: parent.width
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: loadModel(definition["name"])
+                }
 
                 color: "#afcec6"
 
