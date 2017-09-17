@@ -15,6 +15,10 @@ Rectangle {
 	property var connections:         []
     property var connections_visual:  []
 	property var input_values:        []
+    
+    property var temp_names:    []
+    property var temp_params:   ({})
+    property var temp_declared: false
 	
 	readonly property real title_height: 40
     readonly property real input_height: 60
@@ -76,6 +80,29 @@ Rectangle {
         
 		connections_visual[index].destroy()
         connections[index] = null
+    }
+    
+    function get_declaration() {
+        if (node.temp_declared) return []
+        node.temp_declared = true
+            
+        var lines = []
+        for (var i in connections) {
+            var connection = connections[i]
+            if (connection) {
+                extend_array(lines, connection.from_node.get_declaration())
+            }
+        }
+		
+        extend_array(lines, main.declarers[definition.declarer](node))
+        return lines
+    }
+    
+    function get_execution() {
+        var lines = node.get_declaration()
+        
+        extend_array(lines, main.executers[definition.executer](node))
+        return lines
     }
     
     MouseArea {

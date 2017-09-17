@@ -77,12 +77,65 @@ ApplicationWindow {
 	readonly property string color_red: '#fa6a35'
     readonly property string color_green: '#35ba6a'
     
-    property var declarer: {
-        ''
+    property var declarers: {
+        'tf_node': function (node) {
+            var lines = []
+            var line = node.temp_names[0] + ' = ' + node.definition.code + '('
+            var first = true
+            for (var param_code in node.temp_params) {
+                var param = node.temp_params[param_code]
+                if (!first) {
+                    line += ', '
+                }
+                else {
+                    first = false
+                }
+                line += param_code + '=(' + param.code_str + ')'
+            }
+            
+            line += ')'
+            lines.push(line)
+            
+            return lines
+        },
+        'none': function (node) {
+            return []
+        },
     }
     
-    property var executer: {
-        ''
+    property var executers: {
+        'tf_node': function (node) {
+            var lines = []
+			var line = 'print(\'' + (node.temp_params.name ? node.temp_params.name.value : '') + ': {0}\'.format(session.run(' + node.temp_names[0] + ', feed_dict))'
+            lines.push(line)
+            
+            return lines
+        },
+        'multi_exec': function (node) {
+            var lines = []
+            for (var i in node.connections) {
+                if (!node.connections[i]) continue
+                extend_array(lines, node.connections[i].from_node.get_execution())
+            }
+            
+            return lines
+        },
+        'repeater': function (node) {
+            var lines = []
+            lines.push('for i in range(' + node.temp_params.iterations.code_str + '):')
+            if (node.temp_params.node.value) {
+                var sub_lines = []
+                sub_lines.push('if i % 100 == 0: print(\'iteration {0}...\'.format(i))')
+                extend_array(sub_lines, node.temp_params.node.value.from_node.get_execution())
+                add_prefix_strings(sub_lines, '    ')
+                extend_array(lines, sub_lines)
+            }
+            
+            return lines
+        },
+        'none': function (node) {
+            return []
+        },
     }
     
     property var definitions: [
@@ -100,7 +153,7 @@ ApplicationWindow {
                 {
 					'name': 'Type',
                     'type': 'type',
-                    'default': 'float32',
+                    'default': 'tf.float32',
                     'code': 'dtype',
                 },
             ],
@@ -109,6 +162,8 @@ ApplicationWindow {
 					'name': 'Value',
                 },
             ],
+            'declarer': 'tf_node',
+            'executer': 'tf_node',
         },
         {
             'title': 'Uniform Random',
@@ -139,6 +194,8 @@ ApplicationWindow {
                     'name': 'Value',
                 },
             ],
+            'declarer': 'tf_node',
+            'executer': 'tf_node',
         },
 		{
             'title': 'Constant',
@@ -160,7 +217,7 @@ ApplicationWindow {
 				{
 					'name': 'Type',
                     'type': 'type',
-                    'default': 'float32',
+                    'default': 'tf.float32',
                     'code': 'dtype',
                 },
             ],
@@ -169,6 +226,8 @@ ApplicationWindow {
 					'name': 'Value',
                 },
             ],
+            'declarer': 'tf_node',
+            'executer': 'tf_node',
         },
 		{
             'title': 'Variable',
@@ -190,7 +249,7 @@ ApplicationWindow {
 				{
 					'name': 'Type',
                     'type': 'type',
-                    'default': 'float32',
+                    'default': 'tf.float32',
                     'code': 'type',
                 },
             ],
@@ -199,6 +258,8 @@ ApplicationWindow {
 					'name': 'Value',
                 },
             ],
+            'declarer': 'tf_node',
+            'executer': 'tf_node',
         },
 		{
             'title': 'Add',
@@ -229,6 +290,8 @@ ApplicationWindow {
 					'name': 'Result',
                 },
             ],
+            'declarer': 'tf_node',
+            'executer': 'tf_node',
         },
 		{
             'title': 'Subtract',
@@ -259,6 +322,8 @@ ApplicationWindow {
 					'name': 'Result',
                 },
             ],
+            'declarer': 'tf_node',
+            'executer': 'tf_node',
         },
 		{
             'title': 'Multiply',
@@ -289,6 +354,8 @@ ApplicationWindow {
 					'name': 'Result',
                 },
             ],
+            'declarer': 'tf_node',
+            'executer': 'tf_node',
         },
 		{
             'title': 'Matrix Multiply',
@@ -319,11 +386,13 @@ ApplicationWindow {
 					'name': 'Result',
                 },
             ],
+            'declarer': 'tf_node',
+            'executer': 'tf_node',
         },
         {
             'title': 'Squared Difference',
             'color': color_red,
-            'code': 'tf.metrics.mean_squared_error',
+            'code': 'tf.squared_difference',
             'inputs': [
                 {
                     'name': 'Name',
@@ -349,6 +418,8 @@ ApplicationWindow {
                     'name': 'Result',
                 },
             ],
+            'declarer': 'tf_node',
+            'executer': 'tf_node',
         },
         {
             'title': 'Softmax',
@@ -373,18 +444,14 @@ ApplicationWindow {
                     'name': 'Result',
                 },
             ],
+            'declarer': 'tf_node',
+            'executer': 'tf_node',
         },
-		{
+        {
             'title': 'Execute',
-			'color': color_green,
+            'color': color_green,
             'code': '',
-			'inputs': [
-                {
-                    'name': 'Name',
-                    'type': 'string',
-                    'default': '',
-                    'code': 'name',
-                },
+            'inputs': [
                 {
                     'name': 'Node 1',
                     'type': 'reference',
@@ -410,10 +477,42 @@ ApplicationWindow {
                     'code': 'node4',
                 },
                 {
-					'name': 'Node 5',
+                    'name': 'Node 5',
                     'type': 'reference',
                     'default': null,
                     'code': 'node5',
+                },
+            ],
+            'outputs': [
+                {
+                    'name': 'Next',
+                },
+            ],
+            'declarer': 'none',
+            'executer': 'multi_exec',
+        },
+		{
+            'title': 'Repeater',
+			'color': color_green,
+            'code': '',
+			'inputs': [
+                {
+                    'name': 'Name',
+                    'type': 'string',
+                    'default': '',
+                    'code': 'name',
+                },
+                {
+                    'name': 'Node',
+                    'type': 'reference',
+                    'default': null,
+                    'code': 'node',
+                },
+                {
+                    'name': 'Iterations',
+                    'type': 'number',
+                    'default': 100,
+                    'code': 'iterations',
                 },
             ],
 			'outputs': [
@@ -421,6 +520,8 @@ ApplicationWindow {
 					'name': 'Next',
                 },
             ],
+            'declarer': 'none',
+            'executer': 'repeater',
         },
     ]
 	

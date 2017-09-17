@@ -24,7 +24,7 @@ MyDialog {
 		
 	}
 	
-	width: 500
+	width: 600
 	height: parent.height * 0.75
 	
 	property var node
@@ -49,9 +49,14 @@ MyDialog {
 		}
 	}
 	
-	function clear() {
+    function clear() {
+        is_running = Native.is_python_running()
+        text_area.clear()
+    }
+    
+	function add_text(text) {
 		is_running = Native.is_python_running()
-		text_area.clear()
+        text_area.text += text
 	}
 	
 	Timer {

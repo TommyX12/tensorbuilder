@@ -57,7 +57,8 @@ Rectangle {
 	}
 	
 	function run_node(node) {
-		var s = 'import math, os\n'+
+        var script
+        script = 'import math, os\n'+
 		'from tensorflow.examples.tutorials.mnist import input_data\n'+
 		'import tensorflow as tf\n'+
 		'\n'+
@@ -180,13 +181,64 @@ Rectangle {
 		'print_with_index(result)\n'+
 		'print(\'prediction: {0}\'.format(winner))\n'+ ''
 		
-		if (!Native.is_python_running()) {
-			Native.run_python(s)
-			console_dialog.clear()
-		}
+		cache_node_temps()
+		
+        script = node.get_execution().join('\n')
+        
+		
+        console_dialog.clear()
+        console_dialog.add_text(script)
+        
+		// if (!Native.is_python_running()) {
+			// Native.run_python(s)
+			// console_dialog.clear()
+		// }
 
 		console_dialog.open()
 	}
+    
+    function cache_node_temps() {
+        var count = 0
+        for (var i in nodes) {
+            var node = nodes[i]
+            node.temp_names = []
+            for (var j in node.definition.outputs) {
+                node.temp_names.push('node_' + count + '_' + j)
+            }
+            node.temp_declared = false
+			count++
+        }
+        for (var i in nodes) {
+            var node = nodes[i]
+            node.temp_params = {}
+            for (var j in node.input_values) {
+                var param = {}
+                var input_definition = node.definition.inputs[j]
+                var input_value = node.input_values[j]
+                var connection = node.connections[j]
+                
+                if (input_definition.type === 'code' || input_definition.type === 'number' || input_definition.type === 'type') {
+                    param['code_str'] = input_value
+                    param['value'] = input_value
+                }
+                else if (input_definition.type === 'string') {
+                    param['code_str'] = '\'' + input_value + '\''
+                    param['value'] = input_value
+                }
+                else if (input_definition.type === 'reference') {
+                    if (connection === null) {
+                        param['code_str'] = 'null'
+                    }
+                    else {
+                        param['code_str'] = connection.from_node.temp_names[connection.from_index]
+                    }
+                    param['value'] = connection
+                }
+                
+                node.temp_params[input_definition.code] = param
+            }
+        }
+    }
     
     function remove_graph_node(node) {
         for (var i in node.connections) {
@@ -210,6 +262,12 @@ Rectangle {
         
         node.destroy()
     }
+	
+	function remove_all_nodes() {
+		while (nodes.length > 0) {
+			remove_graph_node(nodes[0])
+		}
+	}
 	
 	function start_dragging_connection(from_node, from_index) {
 		dragging_connection.from_node  = from_node
