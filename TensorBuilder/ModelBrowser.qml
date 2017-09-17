@@ -1,4 +1,5 @@
  import QtQuick 2.0
+import QtQuick.Controls 2.2
 
 Item {
 
@@ -67,6 +68,41 @@ Item {
                 }
             }
         }
+    }
+
+    function uploadModel() {
+        var http = new XMLHttpRequest()
+        var url = "http://34.234.84.109:3000/addmodel";
+        http.open("POST", url, true);
+        http.setRequestHeader("Content-type", "application/json");
+
+        http.onreadystatechange = function() { // Call a function when the state changes.
+            if (http.readyState == 4) {
+                if (http.status == 200) {
+                    console.log("success!")
+                } else {
+                    console.log("error: " + http.status)
+                }
+            }
+        }
+        // Change the data to upload actual models
+        var data = {
+            "name" : "temp",
+            "nodes" : []
+        }
+        console.log(data)
+        http.send(JSON.stringify(data));
+    }
+
+    Button {
+        anchors.bottom: parent.bottom
+        height:100;
+        width: parent.width
+
+        text: "UPLOAD"
+        font.pixelSize: 30
+
+        onClicked: uploadModel()
     }
 
 }
