@@ -2,7 +2,7 @@
 
 A drag and drop GUI tool written in Qt to rapidly prototype TensorFlow computational graphs, with sharing features.
 
-![Graph editor](pics/2.png)
+![Graph editor](pics/3.png)
 
 ## Inspiration
 Over the past few years, AI and machine learning has become one of the biggest topics around the world. With numerous open-source libraries quickly gaining popularity, it has become more and more accessible to those who are willing to learn it. However, these tools are still suited only towards those who know a decent bit of programming, and that was a big injustice in our perspective to those who want to start learning.
@@ -24,4 +24,4 @@ This whole weekend was just challenge upon challenge for us, especially since we
 ## The Future
 Obviously, we wish we had more time to put in the project, but it is a hackathon after all. In this weekend, we were able to achieve a minimal prototype that aligns with our vision at the start. In the future, we want to implement more of the Tensorflow library to allow for even more creativity amongst our users, and possible an authentication system for people to save or share models that they like. In the end, we are hoping that our open-source application provides competition to proprietary software, with hopes to bring more people into the world of AI and machine learning.
 
-![Graph editor](pics/3.png)
+![Graph editor](pics/2.png)
