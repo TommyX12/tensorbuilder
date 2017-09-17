@@ -3,7 +3,13 @@ import QtQuick.Controls 2.2
 
 Item {
 
-    function loadModels() {
+    Rectangle{
+        color: "#9abab2"
+        anchors.fill: parent
+    }
+
+    function loadModels(newname) {
+        model_list_model.clear()
         loading_text.text = "loading...";
         var http = new XMLHttpRequest()
         var url = "http://34.234.84.109:3000/models";
@@ -16,8 +22,18 @@ Item {
                     loading_text.text = "";
                     var jsondata = JSON.parse(http.responseText)
                     for (var i = 0; i < jsondata.length; i++) {
-                        // console.log(jsondata[i]["name"])
                         definitions.push({"name":jsondata[i]["name"]})
+                    }
+                    if (newname) {
+                        // make sure the name isn't already in the list
+                        var found = false
+                        for (var i = 0; i < definitions.length; i++){
+                            if (definitions[i]["name"] === newname){
+                                found = true
+                            }
+                        }
+                        // if we didn't find the name already, then add it to the list
+                        if (!found) definitions.push({"name":newname})
                     }
                 } else {
                     console.log("error: " + http.status)
@@ -87,9 +103,24 @@ Item {
         loadModels()
     }
 
+    Button {
+        id: refresh_button
+        anchors.top: parent.top
+        height:100;
+        width: parent.width
+
+        text: "REFRESH"
+        font.pixelSize: 30
+
+        onClicked: loadModels()
+    }
+
     Rectangle{
-        anchors.fill: parent
+
         color: "#9abab2"
+        anchors.top: refresh_button.bottom
+        width: parent.width
+        anchors.bottom: name_field.top
 
         Text {
             id: loading_text
@@ -178,16 +209,30 @@ Item {
                     console.log("error: " + http.status)
                 }
             }
+            // load the model list again after post has gone through
         }
-        // TODO: give the ability to change the name of the model
+        var name = name_field.text !== "" ? name_field.text : "default"
         var data = {
-            "name" : "temp",
+            "name" : name,
             "nodes" : finalnodes
         }
         http.send(JSON.stringify(data))
+        loadModels(name)
+    }
+
+    TextField {
+        id: name_field
+        anchors.bottom: upload_button.top
+        placeholderText: "name"
+
+        font.pointSize: 20
+
+        width: parent.width
+        horizontalAlignment: parent.Center
     }
 
     Button {
+        id: upload_button
         anchors.bottom: parent.bottom
         height:100;
         width: parent.width
