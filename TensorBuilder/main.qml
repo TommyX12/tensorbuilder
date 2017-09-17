@@ -11,89 +11,70 @@ ApplicationWindow {
     
     property var types: [
 		{
-            'name': 'float32',
-            'python': 'tf.float32',
+            'code': 'tf.float32',
         },
         {
-            'name': 'float16',
-            'python': 'tf.float16',
+            'code': 'tf.float16',
         },
         {
-            'name': 'float64',
-            'python': 'tf.float64',
+            'code': 'tf.float64',
         },
         // {
-            // 'name': 'bfloat16',
-            // 'python': 'tf.bfloat16',
+            // 'code': 'tf.bfloat16',
         // },
         {
-            'name': 'complex64',
-            'python': 'tf.complex64',
+            'code': 'tf.complex64',
         },
         {
-            'name': 'complex128',
-            'python': 'tf.complex128',
+            'code': 'tf.complex128',
         },
         {
-            'name': 'int8',
-            'python': 'tf.int8',
+            'code': 'tf.int8',
         },
         {
-            'name': 'uint8',
-            'python': 'tf.uint8',
+            'code': 'tf.uint8',
         },
         {
-            'name': 'uint16',
-            'python': 'tf.uint16',
+            'code': 'tf.uint16',
         },
         {
-            'name': 'int16',
-            'python': 'tf.int16',
+            'code': 'tf.int16',
         },
         {
-            'name': 'int32',
-            'python': 'tf.int32',
+            'code': 'tf.int32',
         },
         {
-            'name': 'int64',
-            'python': 'tf.int64',
+            'code': 'tf.int64',
         },
         {
-            'name': 'bool',
-            'python': 'tf.bool',
+            'code': 'tf.bool',
         },
         {
-            'name': 'string',
-            'python': 'tf.string',
+            'code': 'tf.string',
         },
         // {
-            // 'name': 'qint8',
-            // 'python': 'tf.qint8',
+            // 'code': 'tf.qint8',
         // },
         // {
-            // 'name': 'quint8',
-            // 'python': 'tf.quint8',
+            // 'code': 'tf.quint8',
         // },
         // {
-            // 'name': 'qint16',
-            // 'python': 'tf.qint16',
+            // 'code': 'tf.qint16',
         // },
         // {
-            // 'name': 'quint16',
-            // 'python': 'tf.quint16',
+            // 'code': 'tf.quint16',
         // },
         // {
-            // 'name': 'qint32',
-            // 'python': 'tf.qint32',
+            // 'code': 'tf.qint32',
         // },
         // {
-            // 'name': 'resource',
-            // 'python': 'tf.resource',
+            // 'code': 'tf.resource',
         // },
     ]
 	
 	readonly property string color_blue: '#3583d6'
 	readonly property string color_red: '#fa6a35'
+    readonly property string color_green: '#35ba6a'
     
     property var definitions: [
         {
@@ -104,11 +85,13 @@ ApplicationWindow {
                     'name': 'Name',
                     'type': 'literal',
 					'default': '',
+                    'code': 'name',
                 },
                 {
 					'name': 'Type',
                     'type': 'type',
                     'default': 'float32',
+                    'code': 'dtype',
                 },
             ],
 			'outputs': [
@@ -125,16 +108,19 @@ ApplicationWindow {
                     'name': 'Shape',
                     'type': 'code',
 					'default': '[1]',
+                    'code': 'shape',
                 },
                 {
                     'name': 'Min',
                     'type': 'literal',
 					'default': '0.0',
+                    'code': 'minval',
                 },
                 {
                     'name': 'Max',
                     'type': 'literal',
 					'default': '1.0',
+                    'code': 'maxval',
                 },
             ],
             'outputs': [
@@ -151,16 +137,19 @@ ApplicationWindow {
                     'name': 'Name',
                     'type': 'literal',
 					'default': '',
+                    'code': 'name',
                 },
                 {
 					'name': 'Value',
-                    'type': 'literal',
+                    'type': 'code',
                     'default': 1.0,
+                    'code': 'value',
                 },
 				{
 					'name': 'Type',
                     'type': 'type',
                     'default': 'float32',
+                    'code': 'dtype',
                 },
             ],
 			'outputs': [
@@ -177,16 +166,19 @@ ApplicationWindow {
                     'name': 'Name',
                     'type': 'literal',
 					'default': '',
+                    'code': 'name',
                 },
                 {
 					'name': 'Init Value',
                     'type': 'literal',
                     'default': 1.0,
+                    'code': 'initial_value',
                 },
 				{
 					'name': 'Type',
                     'type': 'type',
                     'default': 'float32',
+                    'code': 'type',
                 },
             ],
 			'outputs': [
@@ -203,16 +195,48 @@ ApplicationWindow {
                     'name': 'Name',
                     'type': 'literal',
 					'default': '',
+                    'code': 'name',
                 },
                 {
-					'name': 'Node 1',
+					'name': 'Input 1',
                     'type': 'reference',
                     'default': null,
+                    'code': 'x',
                 },
 				{
-					'name': 'Node 2',
+					'name': 'Input 2',
                     'type': 'reference',
                     'default': null,
+                    'code': 'y',
+                },
+            ],
+			'outputs': [
+                {
+					'name': 'Result',
+                },
+            ],
+        },
+		{
+            'title': 'Subtract',
+			'color': color_red,
+			'inputs': [
+                {
+                    'name': 'Name',
+                    'type': 'literal',
+					'default': '',
+                    'code': 'name',
+                },
+                {
+					'name': 'Input 1',
+                    'type': 'reference',
+                    'default': null,
+                    'code': 'x',
+                },
+				{
+					'name': 'Input 2',
+                    'type': 'reference',
+                    'default': null,
+                    'code': 'y',
                 },
             ],
 			'outputs': [
@@ -229,16 +253,19 @@ ApplicationWindow {
                     'name': 'Name',
                     'type': 'literal',
 					'default': '',
+                    'code': 'name',
                 },
                 {
-					'name': 'Node 1',
+					'name': 'Input 1',
                     'type': 'reference',
                     'default': null,
+                    'code': 'x',
                 },
 				{
-					'name': 'Node 2',
+					'name': 'Input 2',
                     'type': 'reference',
                     'default': null,
+                    'code': 'y',
                 },
             ],
 			'outputs': [
@@ -247,8 +274,144 @@ ApplicationWindow {
                 },
             ],
         },
+		{
+            'title': 'Matrix Multiply',
+			'color': color_red,
+			'inputs': [
+                {
+                    'name': 'Name',
+                    'type': 'literal',
+					'default': '',
+                    'code': 'name',
+                },
+                {
+					'name': 'Input 1',
+                    'type': 'reference',
+                    'default': null,
+                    'code': 'a',
+                },
+				{
+					'name': 'Input 2',
+                    'type': 'reference',
+                    'default': null,
+                    'code': 'b',
+                },
+            ],
+			'outputs': [
+                {
+					'name': 'Result',
+                },
+            ],
+        },
+        {
+            'title': 'Squared Difference',
+            'color': color_red,
+            'inputs': [
+                {
+                    'name': 'Name',
+                    'type': 'literal',
+                    'default': '',
+                    'code': 'name',
+                },
+                {
+                    'name': 'Input 1',
+                    'type': 'reference',
+                    'default': null,
+                    'code': 'x',
+                },
+                {
+                    'name': 'Input 2',
+                    'type': 'reference',
+                    'default': null,
+                    'code': 'y',
+                },
+            ],
+            'outputs': [
+                {
+                    'name': 'Result',
+                },
+            ],
+        },
+        {
+            'title': 'Softmax',
+            'color': color_red,
+            'inputs': [
+                {
+                    'name': 'Name',
+                    'type': 'literal',
+                    'default': '',
+                    'code': 'name',
+                },
+                {
+                    'name': 'Input',
+                    'type': 'reference',
+                    'default': null,
+                    'code': 'logits',
+                },
+            ],
+            'outputs': [
+                {
+                    'name': 'Result',
+                },
+            ],
+        },
+		{
+            'title': 'Execute',
+			'color': color_green,
+			'inputs': [
+                {
+                    'name': 'Name',
+                    'type': 'literal',
+                    'default': '',
+                    'code': 'name',
+                },
+                {
+                    'name': 'Node 1',
+                    'type': 'reference',
+                    'default': null,
+                    'code': 'node1',
+                },
+                {
+                    'name': 'Node 2',
+                    'type': 'reference',
+                    'default': null,
+                    'code': 'node2',
+                },
+                {
+                    'name': 'Node 3',
+                    'type': 'reference',
+                    'default': null,
+                    'code': 'node3',
+                },
+                {
+                    'name': 'Node 4',
+                    'type': 'reference',
+                    'default': null,
+                    'code': 'node4',
+                },
+                {
+					'name': 'Node 5',
+                    'type': 'reference',
+                    'default': null,
+                    'code': 'node5',
+                },
+            ],
+			'outputs': [
+                {
+					'name': 'Next',
+                },
+            ],
+        },
     ]
 	
+    function repeat_str(string, count) {
+        var result = string
+        for (var i = 1; i < count; ++i) {
+            result += string
+        }
+        return result
+    }
+    
 	function clamp(x, a, b) {
 		return Math.min(Math.max(x, a), b)
 	}

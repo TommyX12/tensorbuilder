@@ -203,7 +203,7 @@ Rectangle {
 							model: {
 								var result = []
 								for (var i in main.types) {
-									result.push(main.types[i]['name'])
+									result.push(main.types[i]['code'])
 								}
 								
 								return result

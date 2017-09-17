@@ -7,7 +7,7 @@ MyDialog {
 	modal: true
 	
 	title: {
-		return is_running ? qsTr("Running...") : qsTr("Completed")
+		return is_running ? qsTr("Running") + main.repeat_str('.', (Math.floor(timer.count / 10) % 3 + 1)) : qsTr("Completed")
 	}
 	
 	standardButtons: {
@@ -55,10 +55,13 @@ MyDialog {
 	}
 	
 	Timer {
+        id: timer
+        property int count: 0
 		interval: 100
 		running: true
 		repeat: true
 		onTriggered: {
+            count++
 			is_running = Native.is_python_running()
 			var stream = Native.get_python_stream()
 			if (stream.length > 0) {
