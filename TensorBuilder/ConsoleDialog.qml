@@ -9,6 +9,8 @@ MyDialog {
 	title: {
 		return is_running ? qsTr("Running") + main.repeat_str('.', (Math.floor(timer.count / 10) % 3 + 1)) : qsTr("Completed")
 	}
+    
+    closePolicy: is_running ? Popup.NoAutoClose : (Popup.CloseOnEscape | Popup.CloseOnPressOutside)
 	
 	standardButtons: {
 		return is_running ? 0 : Dialog.Ok
@@ -45,6 +47,8 @@ MyDialog {
 				selectByKeyboard: true
 				selectByMouse: true
 				readOnly: true
+				
+				wrapMode: TextEdit.WrapAtWordBoundaryOrAnywhere
 			}
 		}
 	}

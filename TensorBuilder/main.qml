@@ -1,6 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.3
+import QtGraphicalEffects 1.0
 
 ApplicationWindow {
     id: main
@@ -963,23 +964,64 @@ ApplicationWindow {
     Component.onCompleted: {
         showMaximized()
     }
+	
+	
+	Item {
+		anchors.top: top_bar.bottom
+		anchors.left: parent.left
+		anchors.right: parent.right
+		anchors.bottom: parent.bottom
+		GraphDisplay {
+			id: graphDisplay
+			anchors.left:   modelBrowser.right
+			anchors.right:  parent.right
+			anchors.top:    parent.top
+			anchors.bottom: parent.bottom
+		}
+		
+		ModelBrowser {
+			id: modelBrowser
+			anchors.left:   parent.left
+			anchors.top:    parent.top
+			anchors.bottom: parent.bottom
+			width: 320
+		}
+	}
+	Rectangle {
+		id: top_bar
+		anchors.left: parent.left
+		anchors.right: parent.right
+		anchors.top: parent.top
+		height: 60
+		color: '#d66321'
+		
+		MyLabel {
+			anchors.verticalCenter: parent.verticalCenter
+			anchors.left: parent.left
+			anchors.leftMargin: 30
+			font.pixelSize: 25
+			text: qsTr('TensorBuilder')
+			color: '#eeeeee'
+		}
+		
+		ToolButton {
+			anchors.right: parent.right
+			anchors.rightMargin: 30
+			anchors.verticalCenter: parent.verticalCenter
+			text: qsTr('Help')
+			onClicked: graphDisplay.show_help()
+		}
+	}
+	DropShadow {
+		anchors.fill: top_bar
+		horizontalOffset: 0
+		verticalOffset: 0
+		radius: 12.0
+		samples: 16
+		color: "#80000000"
+		source: top_bar
+	}
     
-    
-    GraphDisplay {
-        id: graphDisplay
-        anchors.left:   modelBrowser.right
-        anchors.right:  parent.right
-        anchors.top:    parent.top
-        anchors.bottom: parent.bottom
-    }
-    
-    ModelBrowser {
-        id: modelBrowser
-        anchors.left:   parent.left
-        anchors.top:    parent.top
-        anchors.bottom: parent.bottom
-        width: 400
-    }
     
     // SwipeView {
         // id: swipeView

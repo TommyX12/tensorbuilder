@@ -4,7 +4,7 @@ import QtQuick.Controls 2.2
 Item {
 
     Rectangle{
-        color: "#9abab2"
+        color: "#a0a0a0"
         anchors.fill: parent
     }
 
@@ -51,6 +51,8 @@ Item {
         var http = new XMLHttpRequest()
         var url = "http://34.234.84.109:3000/models/" + name;
         http.open("GET", url, true);
+		
+		main.graphDisplay.show_loading(true)
 
         http.onreadystatechange = function() { // Call a function when the state changes.
             var definitions = [];
@@ -67,6 +69,8 @@ Item {
                     console.log("error: " + http.status)
                 }
             }
+			
+			main.graphDisplay.show_loading(false)
         }
         http.send();
     }
@@ -108,31 +112,51 @@ Item {
         loadModels()
     }
 
-    Button {
-        id: refresh_button
+    Rectangle {
+        id: exposition_rect
         anchors.top: parent.top
-        height:100;
+        height:50;
         width: parent.width
+		color: main.color_blue
 
-        text: "REFRESH"
-        font.pixelSize: 30
-
-        onClicked: loadModels()
+        MyLabel {
+            anchors.verticalCenter: parent.verticalCenter
+			anchors.right: parent.right
+			anchors.left: parent.left
+			anchors.rightMargin: 40
+            text: "Community Models"
+            font.pixelSize: 25
+			color: '#ffffff'
+			horizontalAlignment: Text.AlignHCenter
+        }
+        
+        RoundButton {
+            anchors.right: parent.right
+			anchors.rightMargin: 10
+            anchors.verticalCenter: parent.verticalCenter
+            text: '\u21bb'
+			antialiasing: true
+			font.pixelSize: 20
+			font.bold: false
+			
+			onClicked: loadModels()
+        }
     }
 
     Rectangle{
-
-        color: "#9abab2"
-        anchors.top: refresh_button.bottom
+        color: "transparent"
+        anchors.top: exposition_rect.bottom
         width: parent.width
-        anchors.bottom: name_field.top
+        anchors.bottom: lower_rect.top
 
         Text {
             id: loading_text
-            font.pointSize: 30
+            font.pointSize: 22
             color: "white"
 
             width: parent.width
+			height: 60
+			y: 30
             horizontalAlignment: Text.AlignHCenter
         }
 
@@ -157,6 +181,7 @@ Item {
             delegate: Button {
                 height: 80
                 width: parent.width
+				flat: false
 
                 MouseArea {
                     anchors.fill: parent
@@ -166,6 +191,10 @@ Item {
                 text: definition["name"]
                 font.pixelSize: 25
             }
+			
+			ScrollBar.vertical: ScrollBar {
+				active: true
+			}
         }
     }
 
@@ -226,25 +255,34 @@ Item {
         loadModels(name)
     }
 
-    TextField {
-        id: name_field
-        anchors.bottom: upload_button.top
-        placeholderText: "name"
-
-        font.pointSize: 20
-
-        width: parent.width
-        horizontalAlignment: parent.Center
+    Rectangle {
+		id: lower_rect
+		anchors.bottom: upload_button.top
+		width:               parent.width
+		height: 60
+		color: '#666666'
+		TextField {
+			id: name_field
+			placeholderText: "name"
+			anchors.fill: parent
+			anchors.verticalCenter: parent.verticalCenter
+	
+			font.pointSize: 20
+			color: '#ffffff'
+	
+			horizontalAlignment: Text.AlignHCenter
+			selectByMouse:       true
+		}
     }
 
     Button {
         id: upload_button
         anchors.bottom: parent.bottom
-        height:100;
+        height:60;
         width: parent.width
 
-        text: "UPLOAD"
-        font.pixelSize: 30
+        text: qsTr("Save & Upload")
+        font.pixelSize: 22
 
         onClicked: uploadModel()
     }

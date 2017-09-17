@@ -15,5 +15,7 @@
         <file>CodeEditDialog.qml</file>
         <file>ModelBrowser.qml</file>
         <file>ConsoleDialog.qml</file>
+        <file>LoadingDialog.qml</file>
+        <file>HelpDialog.qml</file>
     </qresource>
 </RCC>
