@@ -15,7 +15,7 @@ Rectangle {
 	property var connections:         []
     property var connections_visual:  []
 	property var input_values:        []
-	property var input_visuals:       []
+	property var input_visuals:       null
     
     property var temp_names:    []
     property var temp_params:   ({})
@@ -45,10 +45,19 @@ Rectangle {
         }
     }
 	
+	Timer {
+		interval: 500
+		repeat: true
+		running: true
+		onTriggered: {
+			set_input_values(input_values)
+		}
+	}
 
 	function set_input_values(data) {
 		for (var i = 0; i < data.length; ++i) {
 			input_values[i] = data[i]
+			
 			if (input_visuals[i] && input_visuals[i].set_value) {
 				input_visuals[i].set_value(data[i])
 			}
@@ -197,13 +206,13 @@ Rectangle {
 					width: 150
 					
 					Component.onCompleted: {
-						if (!input_visuals) {
-							input_visuals = []
+						if (!node.input_visuals) {
+							node.input_visuals = []
 						}
-						while (input_visuals.length < index) {
-							input_visuals.push(null)
+						while (node.input_visuals.length <= index) {
+							node.input_visuals.push(null)
 						}
-						input_visuals[index] = this
+						node.input_visuals[index] = this
 					}
 					
 					function set_value(value) {
