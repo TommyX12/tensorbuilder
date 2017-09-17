@@ -249,4 +249,12 @@ Item {
         onClicked: uploadModel()
     }
 
+    Rectangle {
+            id: borderRight
+            width: 2
+            height: parent.height
+            anchors.right: parent.right
+            color: "#878f9b"
+        }
+
 }
