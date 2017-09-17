@@ -88,6 +88,7 @@ ApplicationWindow {
         {
             'title': 'Placeholder',
 			'color': color_blue,
+            'code': 'tf.placeholder',
 			'inputs': [
                 {
                     'name': 'Name',
@@ -111,6 +112,7 @@ ApplicationWindow {
         {
             'title': 'Uniform Random',
             'color': color_blue,
+            'code': 'tf.random_uniform',
             'inputs': [
                 {
                     'name': 'Shape',
@@ -140,6 +142,7 @@ ApplicationWindow {
 		{
             'title': 'Constant',
 			'color': color_blue,
+            'code': 'tf.constant',
 			'inputs': [
                 {
                     'name': 'Name',
@@ -169,6 +172,7 @@ ApplicationWindow {
 		{
             'title': 'Variable',
 			'color': color_blue,
+            'code': 'tf.Variable',
 			'inputs': [
                 {
                     'name': 'Name',
@@ -198,6 +202,7 @@ ApplicationWindow {
 		{
             'title': 'Add',
 			'color': color_red,
+            'code': 'tf.add',
 			'inputs': [
                 {
                     'name': 'Name',
@@ -227,6 +232,7 @@ ApplicationWindow {
 		{
             'title': 'Subtract',
 			'color': color_red,
+            'code': 'tf.subtract',
 			'inputs': [
                 {
                     'name': 'Name',
@@ -256,6 +262,7 @@ ApplicationWindow {
 		{
             'title': 'Multiply',
 			'color': color_red,
+            'code': 'tf.multiply',
 			'inputs': [
                 {
                     'name': 'Name',
@@ -285,6 +292,7 @@ ApplicationWindow {
 		{
             'title': 'Matrix Multiply',
 			'color': color_red,
+            'code': 'tf.matmul',
 			'inputs': [
                 {
                     'name': 'Name',
@@ -314,6 +322,7 @@ ApplicationWindow {
         {
             'title': 'Squared Difference',
             'color': color_red,
+            'code': 'tf.metrics.mean_squared_error',
             'inputs': [
                 {
                     'name': 'Name',
@@ -343,6 +352,7 @@ ApplicationWindow {
         {
             'title': 'Softmax',
             'color': color_red,
+            'code': 'tf.nn.softmax',
             'inputs': [
                 {
                     'name': 'Name',
@@ -366,6 +376,7 @@ ApplicationWindow {
 		{
             'title': 'Execute',
 			'color': color_green,
+            'code': '',
 			'inputs': [
                 {
                     'name': 'Name',
