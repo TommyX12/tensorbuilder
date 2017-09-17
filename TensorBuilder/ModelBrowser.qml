@@ -71,7 +71,7 @@ Item {
                 id: model_list_model
             }
 
-            delegate: Rectangle {
+            delegate: Button {
                 height: 80
                 width: parent.width
 
@@ -80,18 +80,8 @@ Item {
                     onClicked: loadModel(definition["name"])
                 }
 
-                color: "#afcec6"
-
-                Text {
-                    text: definition["name"]
-
-                    width: parent.width
-                    height: parent.height
-
-                    font.pointSize: 20
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                }
+                text: definition["name"]
+                font.pixelSize: 25
             }
         }
     }
