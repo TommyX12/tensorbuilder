@@ -27,6 +27,7 @@ Item {
                     if (newname) {
                         // make sure the name isn't already in the list
                         var found = false
+                        newname = newname.toUpperCase()
                         for (var i = 0; i < definitions.length; i++){
                             if (definitions[i]["name"] === newname){
                                 found = true
@@ -213,7 +214,7 @@ Item {
         }
         var name = name_field.text !== "" ? name_field.text : "default"
         var data = {
-            "name" : name,
+            "name" : name.toUpperCase(),
             "nodes" : finalnodes
         }
         http.send(JSON.stringify(data))
