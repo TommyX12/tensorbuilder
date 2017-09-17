@@ -30,7 +30,6 @@ Item {
 
     // returns a JSON representationof the nodes
     function loadModel(name){
-        // clear all current nodes first
         var http = new XMLHttpRequest()
         var url = "http://34.234.84.109:3000/models/" + name;
         http.open("GET", url, true);
@@ -55,13 +54,30 @@ Item {
     }
 
     function loadNodes(nodelist) {
+        // clear all current nodes first
+        main.graphDisplay.remove_all_nodes()
+        // loop through the node list to add each node to the graph
         for (var i = 0; i < nodelist.length; i++){
-            console.log(JSON.stringify(nodelist[i]))
             for (var j = 0; j < main.definitions.length; j++){
                 if (main.definitions[j]['title'] === nodelist[i]['definition']){
                     var node = graphDisplay.add_graph_node(main.definitions[j])
                     node.x = nodelist[i]['x']
                     node.y = nodelist[i]['y']
+                }
+            }
+        }
+        // loop through the nodes again but this time to add connections
+        var nodes = main.graphDisplay.nodes
+        for (var k = 0; k < nodelist.length; k++){
+            var connections = nodelist[k]['connections']
+            // loop through and set each connection
+            for (var l = 0; l < connections.length; l++) {
+                if (connections[l]){
+                    var targetIndex = -1
+                    for (var key in connections[l]){
+                        targetIndex = key
+                    }
+                    nodes[k].set_connection(nodes[targetIndex], connections[l][key], l)
                 }
             }
         }
