@@ -79,6 +79,9 @@ Item {
             for (var j = 0; j < main.definitions.length; j++){
                 if (main.definitions[j]['title'] === nodelist[i]['definition']){
                     var node = graphDisplay.add_graph_node(main.definitions[j])
+                    if (nodelist[i]['input_values']) {
+                        node.set_input_values(nodelist[i]['input_values'])
+                    }
                     node.x = nodelist[i]['x']
                     node.y = nodelist[i]['y']
                 }
@@ -195,6 +198,7 @@ Item {
                 }
             }
             nodejson['connections'] = connectionarray
+            nodejson['input_values'] = node.input_values
             finalnodes.push(JSON.stringify(nodejson))
         }
 

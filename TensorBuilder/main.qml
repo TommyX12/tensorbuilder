@@ -540,7 +540,7 @@ ApplicationWindow {
             'executer': 'tf_node',
         },
         {
-            'title': 'Reduce Max',
+            'title': 'Arg Max',
             'color': color_red,
             'code': 'tf.argmax',
             'inputs': [

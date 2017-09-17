@@ -15,6 +15,7 @@ Rectangle {
 	property var connections:         []
     property var connections_visual:  []
 	property var input_values:        []
+	property var input_visuals:       []
     
     property var temp_names:    []
     property var temp_params:   ({})
@@ -43,6 +44,16 @@ Rectangle {
 			}
         }
     }
+	
+
+	function set_input_values(data) {
+		for (var i = 0; i < data.length; ++i) {
+			input_values[i] = data[i]
+			if (input_visuals[i] && input_visuals[i].set_value) {
+				input_visuals[i].set_value(data[i])
+			}
+		}
+	}
 	
 	function get_input_point(index) {
 		return {
@@ -185,6 +196,34 @@ Rectangle {
 					height: input_height
 					width: 150
 					
+					Component.onCompleted: {
+						if (!input_visuals) {
+							input_visuals = []
+						}
+						while (input_visuals.length < index) {
+							input_visuals.push(null)
+						}
+						input_visuals[index] = this
+					}
+					
+					function set_value(value) {
+						var i = 0;
+						for (i = 0; i < main.types.length; ++i) {
+							if (main.types[i].code === value) {
+								combo_box.currentIndex = i
+							}
+						}
+						
+						if (!value) {
+							value = ''
+						}
+						else {
+							value = value.toString()
+						}
+						
+						input_literal_field.text = value
+					}
+					
 					Button {
 						height: parent.height + 10
 						y: -5
@@ -222,6 +261,8 @@ Rectangle {
 						}
 						
 						ComboBox {
+							id: combo_box
+
 							Layout.fillHeight: true
 							Layout.fillWidth: true
 							Layout.minimumWidth: 10
@@ -245,6 +286,7 @@ Rectangle {
 						
                         TextField {
                             id: input_literal_field
+							
                             height: 22
                             Layout.fillWidth: true
                             Layout.minimumWidth: 10

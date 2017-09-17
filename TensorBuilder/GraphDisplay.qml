@@ -9,7 +9,7 @@ Rectangle {
     property real offset_y: view.y
 	property real view_scale: 1
     property real view_scale_rate: 0.25
-	property real view_scale_min: 0.1
+	property real view_scale_min: 0.25
 	property real view_scale_max: 4
 	
 	property bool target_set: false
