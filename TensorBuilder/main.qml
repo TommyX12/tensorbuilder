@@ -478,7 +478,12 @@ ApplicationWindow {
         }
     }
 
-    
+    function extend_array(array1, array2) {
+        for (var i = 0; i < array2.length; i++){
+            array1.push(array2[i])
+        }
+    }
+
     Component.onCompleted: {
         showMaximized()
     }
