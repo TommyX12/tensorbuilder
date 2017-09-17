@@ -47,6 +47,7 @@ Item {
 
     // returns a JSON representationof the nodes
     function loadModel(name){
+        name_field.text = name
         var http = new XMLHttpRequest()
         var url = "http://34.234.84.109:3000/models/" + name;
         http.open("GET", url, true);
