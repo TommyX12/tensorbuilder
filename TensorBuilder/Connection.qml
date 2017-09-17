@@ -45,8 +45,8 @@ Item {
 
 	Canvas {
 		id: canvas
-        width: Math.min(canvas_rect.width / canvas_rect.height * 256, 256)
-        height: Math.min(canvas_rect.height / canvas_rect.width * 256, 256)
+        width: Math.min(canvas_rect.width / canvas_rect.height * 512, 512)
+        height: Math.min(canvas_rect.height / canvas_rect.width * 512, 512)
 		x: canvas_rect.x
 		y: canvas_rect.y
 		property color strokeStyle: from_node.definition.color

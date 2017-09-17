@@ -75,7 +75,9 @@ ApplicationWindow {
 	
 	readonly property string color_blue: '#3583d6'
 	readonly property string color_red: '#fa6a35'
+    readonly property string color_purple: '#aa6a95'
     readonly property string color_green: '#35ba6a'
+    readonly property string color_grey: '#666666'
     
     property var declarers: {
         'tf_node': function (node) {
@@ -98,6 +100,23 @@ ApplicationWindow {
             
             return lines
         },
+        'mnist': function (node) {
+            var lines = [
+                'from tensorflow.examples.tutorials.mnist import input_data',
+                'mnist = input_data.read_data_sets("MNIST_data/", one_hot = True)',
+                node.temp_names[0] + ', ' + node.temp_names[1] + ' = mnist.train.next_batch(1000)',
+                node.temp_names[2] + ' = mnist.test.images',
+                node.temp_names[3] + ' = mnist.test.labels',
+            ]
+            
+            return lines
+        },
+        'global_var': function (node) {
+            var lines = [
+                node.temp_names[0] + ' = None'
+            ]
+            return lines
+        },
         'none': function (node) {
             return []
         },
@@ -105,9 +124,10 @@ ApplicationWindow {
     
     property var executers: {
         'tf_node': function (node) {
-            var lines = []
-			var line = 'print(\'' + (node.temp_params.name ? node.temp_params.name.value : '') + ': {0}\'.format(session.run(' + node.temp_names[0] + ', feed_dict))'
-            lines.push(line)
+            var lines = [
+                '_ = session.run(' + node.temp_names[0] + ', feed_dict)',
+                'if _ is not None: print(\'' + (node.temp_params.name ? node.temp_params.name.value : '') + ': {0}\'.format(_))',
+            ]
             
             return lines
         },
@@ -131,6 +151,20 @@ ApplicationWindow {
                 extend_array(lines, sub_lines)
             }
             
+            return lines
+        },
+        'set_placeholder': function (node) {
+            var lines = [
+                'feed_dict[' + node.temp_params.name.code_str + ' + \':0\'] = ' + node.temp_params.value.code_str,
+            ]
+            
+            return lines
+        },
+        'global_var': function (node) {
+            var lines = [
+                'if ' + node.temp_names[0] + ' is None: ' + node.temp_names[0] + ' = ' + node.definition.code + '()',
+                'session.run(' + node.temp_names[0] + ')',
+            ]
             return lines
         },
         'none': function (node) {
@@ -242,15 +276,15 @@ ApplicationWindow {
                 },
                 {
 					'name': 'Init Value',
-                    'type': 'number',
-                    'default': 1.0,
+                    'type': 'reference',
+                    'default': '',
                     'code': 'initial_value',
                 },
 				{
 					'name': 'Type',
                     'type': 'type',
                     'default': 'tf.float32',
-                    'code': 'type',
+                    'code': 'dtype',
                 },
             ],
 			'outputs': [
@@ -390,9 +424,221 @@ ApplicationWindow {
             'executer': 'tf_node',
         },
         {
+            'title': 'Negative',
+            'color': color_red,
+            'code': 'tf.negative',
+            'inputs': [
+                {
+                    'name': 'Name',
+                    'type': 'string',
+                    'default': '',
+                    'code': 'name',
+                },
+                {
+                    'name': 'Input',
+                    'type': 'reference',
+                    'default': null,
+                    'code': 'x',
+                },
+            ],
+            'outputs': [
+                {
+                    'name': 'Result',
+                },
+            ],
+            'declarer': 'tf_node',
+            'executer': 'tf_node',
+        },
+        {
+            'title': 'Log',
+            'color': color_red,
+            'code': 'tf.log',
+            'inputs': [
+                {
+                    'name': 'Name',
+                    'type': 'string',
+                    'default': '',
+                    'code': 'name',
+                },
+                {
+                    'name': 'Input',
+                    'type': 'reference',
+                    'default': null,
+                    'code': 'x',
+                },
+            ],
+            'outputs': [
+                {
+                    'name': 'Result',
+                },
+            ],
+            'declarer': 'tf_node',
+            'executer': 'tf_node',
+        },
+        {
             'title': 'Squared Difference',
             'color': color_red,
             'code': 'tf.squared_difference',
+            'inputs': [
+                {
+                    'name': 'Name',
+                    'type': 'string',
+                    'default': '',
+                    'code': 'name',
+                },
+                {
+                    'name': 'Input 1',
+                    'type': 'reference',
+                    'default': null,
+                    'code': 'x',
+                },
+                {
+                    'name': 'Input 2',
+                    'type': 'reference',
+                    'default': null,
+                    'code': 'y',
+                },
+            ],
+            'outputs': [
+                {
+                    'name': 'Result',
+                },
+            ],
+            'declarer': 'tf_node',
+            'executer': 'tf_node',
+        },
+        {
+            'title': 'Reduce Sum',
+            'color': color_red,
+            'code': 'tf.reduce_sum',
+            'inputs': [
+                {
+                    'name': 'Name',
+                    'type': 'string',
+                    'default': '',
+                    'code': 'name',
+                },
+                {
+                    'name': 'Input',
+                    'type': 'reference',
+                    'default': null,
+                    'code': 'input_tensor',
+                },
+                {
+                    'name': 'Axis',
+                    'type': 'number',
+                    'default': 0,
+                    'code': 'axis',
+                },
+            ],
+            'outputs': [
+                {
+                    'name': 'Result',
+                },
+            ],
+            'declarer': 'tf_node',
+            'executer': 'tf_node',
+        },
+        {
+            'title': 'Reduce Max',
+            'color': color_red,
+            'code': 'tf.argmax',
+            'inputs': [
+                {
+                    'name': 'Name',
+                    'type': 'string',
+                    'default': '',
+                    'code': 'name',
+                },
+                {
+                    'name': 'Input',
+                    'type': 'reference',
+                    'default': null,
+                    'code': 'input',
+                },
+                {
+                    'name': 'Axis',
+                    'type': 'number',
+                    'default': 0,
+                    'code': 'axis',
+                },
+            ],
+            'outputs': [
+                {
+                    'name': 'Result',
+                },
+            ],
+            'declarer': 'tf_node',
+            'executer': 'tf_node',
+        },
+        {
+            'title': 'Reduce Mean',
+            'color': color_red,
+            'code': 'tf.reduce_mean',
+            'inputs': [
+                {
+                    'name': 'Name',
+                    'type': 'string',
+                    'default': '',
+                    'code': 'name',
+                },
+                {
+                    'name': 'Input',
+                    'type': 'reference',
+                    'default': null,
+                    'code': 'input_tensor',
+                },
+                {
+                    'name': 'Axis',
+                    'type': 'number',
+                    'default': 0,
+                    'code': 'axis',
+                },
+            ],
+            'outputs': [
+                {
+                    'name': 'Result',
+                },
+            ],
+            'declarer': 'tf_node',
+            'executer': 'tf_node',
+        },
+        {
+            'title': 'Cast',
+            'color': color_red,
+            'code': 'tf.cast',
+            'inputs': [
+                {
+                    'name': 'Name',
+                    'type': 'string',
+                    'default': '',
+                    'code': 'name',
+                },
+                {
+                    'name': 'Input',
+                    'type': 'reference',
+                    'default': null,
+                    'code': 'x',
+                },
+                {
+                    'name': 'Type',
+                    'type': 'type',
+                    'default': 'tf.float32',
+                    'code': 'dtype',
+                },
+            ],
+            'outputs': [
+                {
+                    'name': 'Result',
+                },
+            ],
+            'declarer': 'tf_node',
+            'executer': 'tf_node',
+        },
+        {
+            'title': 'Equals',
+            'color': color_red,
+            'code': 'tf.equal',
             'inputs': [
                 {
                     'name': 'Name',
@@ -448,6 +694,21 @@ ApplicationWindow {
             'executer': 'tf_node',
         },
         {
+            'title': 'Initialize',
+            'color': color_green,
+            'code': 'tf.global_variables_initializer',
+            'inputs': [
+                
+            ],
+            'outputs': [
+                {
+                    'name': 'Run',
+                },
+            ],
+            'declarer': 'global_var',
+            'executer': 'global_var',
+        },
+        {
             'title': 'Execute',
             'color': color_green,
             'code': '',
@@ -485,17 +746,17 @@ ApplicationWindow {
             ],
             'outputs': [
                 {
-                    'name': 'Next',
+                    'name': 'Run',
                 },
             ],
             'declarer': 'none',
             'executer': 'multi_exec',
         },
-		{
+        {
             'title': 'Repeater',
-			'color': color_green,
+            'color': color_green,
             'code': '',
-			'inputs': [
+            'inputs': [
                 {
                     'name': 'Name',
                     'type': 'string',
@@ -515,13 +776,115 @@ ApplicationWindow {
                     'code': 'iterations',
                 },
             ],
-			'outputs': [
+            'outputs': [
                 {
-					'name': 'Next',
+                    'name': 'Run',
                 },
             ],
             'declarer': 'none',
             'executer': 'repeater',
+        },
+        {
+            'title': 'Set Placeholder',
+            'color': color_green,
+            'code': '',
+            'inputs': [
+                {
+                    'name': 'Placeholder',
+                    'type': 'string',
+                    'default': '',
+                    'code': 'name',
+                },
+                {
+                    'name': 'Value',
+                    'type': 'code',
+                    'default': '',
+                    'code': 'value',
+                },
+            ],
+            'outputs': [
+                {
+                    'name': 'Run',
+                },
+            ],
+            'declarer': 'none',
+            'executer': 'set_placeholder',
+        },
+        {
+            'title': 'Set Placeholder Ref',
+            'color': color_green,
+            'code': '',
+            'inputs': [
+                {
+                    'name': 'Placeholder',
+                    'type': 'string',
+                    'default': '',
+                    'code': 'name',
+                },
+                {
+                    'name': 'Value',
+                    'type': 'reference',
+                    'default': null,
+                    'code': 'value',
+                },
+            ],
+            'outputs': [
+                {
+                    'name': 'Run',
+                },
+            ],
+            'declarer': 'none',
+            'executer': 'set_placeholder',
+        },
+        {
+            'title': 'Minimize Step',
+            'color': color_purple,
+            'code': 'tf.train.GradientDescentOptimizer(0.5).minimize',
+            'inputs': [
+                {
+                    'name': 'Name',
+                    'type': 'string',
+                    'default': '',
+                    'code': 'name',
+                },
+                {
+                    'name': 'Cost Function',
+                    'type': 'reference',
+                    'default': null,
+                    'code': 'loss',
+                },
+            ],
+            'outputs': [
+                {
+                    'name': 'Run',
+                },
+            ],
+            'declarer': 'tf_node',
+            'executer': 'tf_node',
+        },
+		{
+            'title': 'MNIST Data',
+			'color': color_grey,
+            'code': '',
+			'inputs': [
+                
+            ],
+			'outputs': [
+                {
+                    'name': 'Train Input',
+                },
+                {
+                    'name': 'Train Labels',
+                },
+                {
+                    'name': 'Test Input',
+                },
+                {
+					'name': 'Test Labels',
+                },
+            ],
+            'declarer': 'mnist',
+            'executer': 'none',
         },
     ]
 	

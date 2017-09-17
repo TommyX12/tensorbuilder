@@ -9,7 +9,7 @@ Rectangle {
     property real offset_y: view.y
 	property real view_scale: 1
     property real view_scale_rate: 0.25
-	property real view_scale_min: 0.5
+	property real view_scale_min: 0.1
 	property real view_scale_max: 4
 	
 	property bool target_set: false
@@ -51,8 +51,8 @@ Rectangle {
     }
 	
 	function show_code_editor(node, index) {
-		code_edit_dialog.node = node
 		code_edit_dialog.index = index
+        code_edit_dialog.node = node
 		code_edit_dialog.open()
 	}
 	
@@ -182,17 +182,24 @@ Rectangle {
 		'print(\'prediction: {0}\'.format(winner))\n'+ ''
 		
 		cache_node_temps()
-		
-        script = node.get_execution().join('\n')
         
+        var lines = [
+            'import math, os', 
+            'import tensorflow as tf', 
+            'feed_dict = {}', 
+            'session = tf.InteractiveSession()', 
+        ]
 		
-        console_dialog.clear()
-        console_dialog.add_text(script)
+        extend_array(lines, node.get_execution())
         
-		// if (!Native.is_python_running()) {
-			// Native.run_python(s)
-			// console_dialog.clear()
-		// }
+        script = lines.join('\n')
+		
+        if (!Native.is_python_running()) {
+            console_dialog.clear()
+            console_dialog.add_text(script)
+            console_dialog.add_text('\n')
+            Native.run_python(script)
+        }
 
 		console_dialog.open()
 	}
@@ -222,12 +229,15 @@ Rectangle {
                     param['value'] = input_value
                 }
                 else if (input_definition.type === 'string') {
+                    if (input_definition.code === 'name' && input_value.length === 0) {
+                        input_value = 'node'
+                    }
                     param['code_str'] = '\'' + input_value + '\''
                     param['value'] = input_value
                 }
                 else if (input_definition.type === 'reference') {
                     if (connection === null) {
-                        param['code_str'] = 'null'
+                        param['code_str'] = 'None'
                     }
                     else {
                         param['code_str'] = connection.from_node.temp_names[connection.from_index]
