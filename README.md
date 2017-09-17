@@ -4,7 +4,7 @@ A drag and drop GUI tool written in Qt to rapidly prototype TensorFlow computati
 
 ## Goals
 
-  - To machine learning more accessible to everyone regardless of programming backgrounds
+  - To make machine learning more accessible to everyone regardless of programming backgrounds
   - To allow professionals to quickly test and experiment with different models
   - To simplify sharing and forking of experimental models for accelerated research
 
