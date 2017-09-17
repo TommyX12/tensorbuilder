@@ -56,6 +56,19 @@ Rectangle {
 		code_edit_dialog.open()
 	}
 	
+	function show_help() {
+		help_dialog.open()
+	}
+	
+	function show_loading(show) {
+		if (show) {
+			loading_dialog.open()
+		}
+		else {
+			loading_dialog.close()
+		}
+	}
+	
 	function run_node(node) {
         var script
         script = 'import math, os\n'+
@@ -196,8 +209,8 @@ Rectangle {
 		
         if (!Native.is_python_running()) {
             console_dialog.clear()
-            console_dialog.add_text(script)
-            console_dialog.add_text('\n')
+            // console_dialog.add_text(script)
+            console_dialog.add_text('...\n')
             Native.run_python(script)
         }
 
@@ -409,7 +422,7 @@ Rectangle {
 		y: 0
 
 		MenuItem {
-			text: qsTr('New...')
+			text: qsTr('New Node...')
 			
 			onTriggered: {
 				new_node_dialog.open()
@@ -427,5 +440,11 @@ Rectangle {
 	
 	ConsoleDialog {
 		id: console_dialog
+	}
+	LoadingDialog {
+		id: loading_dialog
+	}
+	HelpDialog {
+		id: help_dialog
 	}
 }
