@@ -108,7 +108,7 @@ Rectangle {
                 text: qsTr('Run')
                 
                 onTriggered: {
-                    
+					graphDisplay.run_node(node)
                 }
             }
         }

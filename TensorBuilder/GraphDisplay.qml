@@ -55,6 +55,138 @@ Rectangle {
 		code_edit_dialog.index = index
 		code_edit_dialog.open()
 	}
+	
+	function run_node(node) {
+		var s = 'import math, os\n'+
+		'from tensorflow.examples.tutorials.mnist import input_data\n'+
+		'import tensorflow as tf\n'+
+		'\n'+
+		'mnist = input_data.read_data_sets("MNIST_data/", one_hot = True)\n'+
+		'\n'+
+		'#  print(tf.Session().run(tf.constant(\'Hello, World!\')))\n'+
+		'\n'+
+		'input_dim_raw = 28\n'+
+		'input_dim     = 28 * 28\n'+
+		'output_dim    = 10\n'+
+		'init_min      = 0\n'+
+		'init_max      = 0.1\n'+
+		'iterations    = 1000\n'+
+		'batch_size    = 100\n'+
+		'\n'+
+		'iteration_log_frequency = 100\n'+
+		'\n'+
+		'num_data = None\n'+
+		'\n'+
+		'inputs      = tf.placeholder(tf.float32, [num_data, input_dim])\n'+
+		'\n'+
+		'weights     = tf.Variable(tf.random_uniform([input_dim, output_dim], init_min, init_max))\n'+
+		'biasses       = tf.Variable(tf.random_uniform([output_dim], init_min, init_max))\n'+
+		'    \n'+
+		'outputs     = tf.nn.softmax(tf.add(tf.matmul(inputs, weights), biasses))\n'+
+		'labels      = tf.placeholder(tf.float32, [num_data, 10])\n'+
+		'\n'+
+		'cost       = tf.reduce_mean(-tf.reduce_sum(tf.multiply(labels, tf.log(outputs)), axis = 1))\n'+
+		'\n'+
+		'init       = tf.global_variables_initializer()\n'+
+		'train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cost)\n'+
+		'\n'+
+		'session = tf.InteractiveSession()\n'+
+		'\n'+
+		'print(\'initializing.\')\n'+
+		'session.run(init)\n'+
+		'\n'+
+		'for i in range(iterations):\n'+
+		'    if i % iteration_log_frequency == 0:\n'+
+		'        print(\'iteration {0}...\'.format(i))\n'+
+		'        \n'+
+		'    batch_input, batch_label = mnist.train.next_batch(batch_size)\n'+
+		'    # note the use of vectorization and putting 2 matrices to multiple together\n'+
+		'    session.run(train_step, {inputs: batch_input, labels: batch_label})\n'+
+		'\n'+
+		'print(\'training complete.\')\n'+
+		'\n'+
+		'predictions = tf.argmax(outputs, 1)\n'+
+		'accuracies  = tf.reduce_mean(tf.cast(tf.equal(predictions, tf.argmax(labels, 1)), tf.float32))\n'+
+		'\n'+
+		'print(\'accuracy: {0}\'.format(\n'+
+		'    session.run(\n'+
+		'        accuracies,\n'+
+		'        {inputs: mnist.test.images, labels: mnist.test.labels}\n'+
+		'    )\n'+
+		'))\n'+
+		'\n'+
+		'def predict(input):\n'+
+		'    result = session.run(outputs, {inputs: [input]})[0].tolist()\n'+
+		'    winner = 0\n'+
+		'    curmax = 0\n'+
+		'    for i in range(1, len(result)):\n'+
+		'        if result[i] > curmax:\n'+
+		'            winner = i\n'+
+		'            curmax = result[i]\n'+
+		'        \n'+
+		'    return result, winner\n'+
+		'\n'+
+		'def flatten(array):\n'+
+		'    result = []\n'+
+		'    for row in array:\n'+
+		'        result += row\n'+
+		'    \n'+
+		'    return result\n'+
+		'\n'+
+		'def print_with_index(array):\n'+
+		'    for i in range(len(array)):\n'+
+		'        print(\'{0}:\t{1} {2}\'.format(i, visualize_float(array[i]), array[i]))\n'+
+		'    \n'+
+		'    \n'+
+		'\n'+
+		'def visualize_float(x, length = 16):\n'+
+		'    steps = round(x * length)\n'+
+		'    return \'-\' * steps + \' \' * (length - steps)\n'+
+		'\n'+
+		'x = [[0 for j in range(input_dim_raw)] for i in range(input_dim_raw)]\n'+
+		'_ = 0\n'+
+		'x = [\n'+
+		'    [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_],\n'+
+		'    [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_],\n'+
+		'    [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_],\n'+
+		'    [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_],\n'+
+		'    [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_],\n'+
+		'    [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_],\n'+
+		'    [_,_,_,_,_,_,_,_,_,_,1,1,1,1,1,1,1,1,1,1,_,_,_,_,_,_,_,_],\n'+
+		'    [_,_,_,_,_,_,_,_,_,_,1,1,_,_,_,_,_,1,1,_,_,_,_,_,_,_,_,_],\n'+
+		'    [_,_,_,_,_,_,_,_,_,_,1,1,_,_,_,_,_,1,1,_,_,_,_,_,_,_,_,_],\n'+
+		'    [_,_,_,_,_,_,_,_,_,_,1,1,_,_,_,_,_,1,1,_,_,_,_,_,_,_,_,_],\n'+
+		'    [_,_,_,_,_,_,_,_,_,_,1,1,_,_,_,_,_,1,1,_,_,_,_,_,_,_,_,_],\n'+
+		'    [_,_,_,_,_,_,_,_,_,_,1,1,_,_,_,_,_,1,1,_,_,_,_,_,_,_,_,_],\n'+
+		'    [_,_,_,_,_,_,_,_,_,_,1,1,_,_,_,_,_,1,1,_,_,_,_,_,_,_,_,_],\n'+
+		'    [_,_,_,_,_,_,_,_,_,_,1,1,1,1,1,1,1,1,1,_,_,_,_,_,_,_,_,_],\n'+
+		'    [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,1,1,_,_,_,_,_,_,_,_,_],\n'+
+		'    [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,1,1,_,_,_,_,_,_,_,_,_],\n'+
+		'    [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,1,1,_,_,_,_,_,_,_,_,_],\n'+
+		'    [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,1,1,_,_,_,_,_,_,_,_,_],\n'+
+		'    [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,1,1,_,_,_,_,_,_,_,_,_],\n'+
+		'    [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,1,1,_,_,_,_,_,_,_,_,_],\n'+
+		'    [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,1,1,_,_,_,_,_,_,_,_,_],\n'+
+		'    [_,_,_,_,_,_,_,_,_,_,1,1,1,1,1,1,1,1,1,_,_,_,_,_,_,_,_,_],\n'+
+		'    [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_],\n'+
+		'    [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_],\n'+
+		'    [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_],\n'+
+		'    [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_],\n'+
+		'    [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_],\n'+
+		'    [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_]\n'+
+		']\n'+
+		'\n'+
+		'result, winner = predict(flatten(x))\n'+
+		'print_with_index(result)\n'+
+		'print(\'prediction: {0}\'.format(winner))\n'+ ''
+		
+		if (!Native.is_python_running()) {
+			Native.run_python(s)
+			console_dialog.clear()
+		}
+
+		console_dialog.open()
+	}
     
     function remove_graph_node(node) {
         for (var i in node.connections) {
@@ -223,5 +355,9 @@ Rectangle {
 	
 	CodeEditDialog {
 		id: code_edit_dialog
+	}
+	
+	ConsoleDialog {
+		id: console_dialog
 	}
 }
