@@ -4,6 +4,7 @@ import QtQuick.Controls 2.2
 Item {
 
     function loadModels() {
+        loading_text.text = "loading...";
         var http = new XMLHttpRequest()
         var url = "http://34.234.84.109:3000/models";
         http.open("GET", url, true);
@@ -12,6 +13,7 @@ Item {
             var definitions = [];
             if (http.readyState == 4) {
                 if (http.status == 200) {
+                    loading_text.text = "";
                     var jsondata = JSON.parse(http.responseText)
                     for (var i = 0; i < jsondata.length; i++) {
                         // console.log(jsondata[i]["name"])
@@ -52,6 +54,15 @@ Item {
     Rectangle{
         anchors.fill: parent
         color: "#9abab2"
+
+        Text {
+            id: loading_text
+            font.pointSize: 30
+            color: "white"
+
+            width: parent.width
+            horizontalAlignment: Text.AlignHCenter
+        }
 
         ListView{
             id: model_list_view
