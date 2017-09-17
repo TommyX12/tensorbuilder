@@ -83,7 +83,7 @@ ApplicationWindow {
 			'inputs': [
                 {
                     'name': 'Name',
-                    'type': 'literal',
+                    'type': 'string',
 					'default': '',
                     'code': 'name',
                 },
@@ -112,13 +112,13 @@ ApplicationWindow {
                 },
                 {
                     'name': 'Min',
-                    'type': 'literal',
+                    'type': 'number',
 					'default': '0.0',
                     'code': 'minval',
                 },
                 {
                     'name': 'Max',
-                    'type': 'literal',
+                    'type': 'number',
 					'default': '1.0',
                     'code': 'maxval',
                 },
@@ -135,7 +135,7 @@ ApplicationWindow {
 			'inputs': [
                 {
                     'name': 'Name',
-                    'type': 'literal',
+                    'type': 'string',
 					'default': '',
                     'code': 'name',
                 },
@@ -164,13 +164,13 @@ ApplicationWindow {
 			'inputs': [
                 {
                     'name': 'Name',
-                    'type': 'literal',
+                    'type': 'string',
 					'default': '',
                     'code': 'name',
                 },
                 {
 					'name': 'Init Value',
-                    'type': 'literal',
+                    'type': 'number',
                     'default': 1.0,
                     'code': 'initial_value',
                 },
@@ -193,7 +193,7 @@ ApplicationWindow {
 			'inputs': [
                 {
                     'name': 'Name',
-                    'type': 'literal',
+                    'type': 'string',
 					'default': '',
                     'code': 'name',
                 },
@@ -222,7 +222,7 @@ ApplicationWindow {
 			'inputs': [
                 {
                     'name': 'Name',
-                    'type': 'literal',
+                    'type': 'string',
 					'default': '',
                     'code': 'name',
                 },
@@ -251,7 +251,7 @@ ApplicationWindow {
 			'inputs': [
                 {
                     'name': 'Name',
-                    'type': 'literal',
+                    'type': 'string',
 					'default': '',
                     'code': 'name',
                 },
@@ -280,7 +280,7 @@ ApplicationWindow {
 			'inputs': [
                 {
                     'name': 'Name',
-                    'type': 'literal',
+                    'type': 'string',
 					'default': '',
                     'code': 'name',
                 },
@@ -309,7 +309,7 @@ ApplicationWindow {
             'inputs': [
                 {
                     'name': 'Name',
-                    'type': 'literal',
+                    'type': 'string',
                     'default': '',
                     'code': 'name',
                 },
@@ -338,7 +338,7 @@ ApplicationWindow {
             'inputs': [
                 {
                     'name': 'Name',
-                    'type': 'literal',
+                    'type': 'string',
                     'default': '',
                     'code': 'name',
                 },
@@ -361,7 +361,7 @@ ApplicationWindow {
 			'inputs': [
                 {
                     'name': 'Name',
-                    'type': 'literal',
+                    'type': 'string',
                     'default': '',
                     'code': 'name',
                 },

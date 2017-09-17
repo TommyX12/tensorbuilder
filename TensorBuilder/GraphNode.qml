@@ -222,7 +222,7 @@ Rectangle {
                             Layout.fillWidth: true
                             Layout.minimumWidth: 10
                             Layout.maximumWidth: 65536
-                            visible: definition.type === 'literal'
+                            visible: definition.type === 'string' || definition.type === 'number'
                             selectByMouse: true
                             placeholderText: qsTr('(input)')
 							
