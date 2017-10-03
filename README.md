@@ -1,6 +1,6 @@
 # TensorBuilder
 
-A drag and drop GUI tool written in Qt to rapidly prototype TensorFlow computational graphs, with the ability to instantly share your models to the community.
+A drag and drop GUI tool written in Qt to rapidly prototype TensorFlow computational graphs, and instantly share your models to the community.
 
 ## Goals
 
